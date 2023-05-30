@@ -4,7 +4,7 @@
 
 - Pubblica su GitHub tutti i progetti che vuoi controllare durante l'esame e pinnali nella homepage
 - :exclamation: USB con:
-  - Materiale TDP e appunti (progetti, laboratori, slides, appunti e tutto quello che vuoi)
+  - Materiale TDP e appunti (progetti, laboratori, slides, ***appunti! (time handling!!!)*** e tutto quello che vuoi)
   - File TXT con password Polito, password GitHub, e chiave SSH GitHub
 - :exclamation: Cellulare con password Polito e password GitHub + Autenticatore a 2 fattori etc.
 - :exclamation: Carta e penna
