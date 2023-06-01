@@ -1,5 +1,11 @@
 # 📝 TODO: TDP
 
+TODO:
+
+    [ ] Add queries and ER structures of the 2 DBs
+    [ ] Add DES code
+    [ ] Implement Java Time Management here?? 
+
 ## 🎒 Roba da portare / Todo prima dell'esame
 
 - Pubblica su GitHub tutti i progetti che vuoi controllare durante l'esame e pinnali nella homepage
@@ -22,7 +28,7 @@
 - Assicurati di aver definito `hashCode` e `equals` in ogni java bean
 - Pulisci il grafo ogni volta che fai clic sul pulsante "Crea grafo"
 - Pulisci dati dentro il Model e text field nel Controller se devono essere puliti durante l'esecuzione
-- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (vedi a [fine punto 1]())
+- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (vedi a *fine punto 1*)
 - Controlla attentamente le tabelle e la struttura del db utilizzata
 - Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
 - Fai dichiarazioni di Sysout pulite per debuggare sul momento, ma non spenderci troppo tempo
@@ -56,10 +62,10 @@
 ### 1. Skeleton of model
 
 ```java
-Graph<?,?> graph, 
-List<Node> allNodes, 
-Dao dao
-Map<Integer, Node> idMap // Only if necessary!
+Graph<?,?> graph;
+List<Node> allNodes; 
+Dao dao;
+Map<Integer, Node> idMap; // Only if necessary!
 
 public Model() { 
     graph = new Graph<>(Edge.class); 
@@ -69,7 +75,7 @@ public Model() {
     ...; // lazy
 }
 
-private void loadNodes() -> {
+private void loadNodes() {
     // Se o la mappa, o la lista, sono vuote (anche solo una delle due) allora 
     // significa che si è verificato un errore nel caricamento di tali dati dal DB
     // dunque è meglio ricaricare tutto da capo
@@ -93,6 +99,10 @@ public void buildGraph() -> {
 ```
 
 ### 2 Make Queries
+
+| :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much the same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with for-inner-fors; sometimes this last approach can be easier! |
+|------------------------------------------------------------------------------------------------------|
+
 
 - Watch out for Double Couples and Self Couples! --> If the graph is oriented, weighted or do not alow self-loop this could broke your code!
 - Do not make super-hard queries, in case it happens ask teachers!
