@@ -160,7 +160,9 @@ Watch out for *self-loops* and *double-pairs*!
  * come specificato nella stessa documentazione di java, 
  * disponibile qui: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html#:~:text=However%2C%20this%20example,your%20program%27s%20resources.
  */
+```
 
+```java
 void Collection<Stuff> loadStuff(Map<Integer, Node> idMap, ...) {
 
     String sql = "SELECT s.playerID "
