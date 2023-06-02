@@ -1,10 +1,11 @@
-# 📝 TODO: TDP
+# 📝 How To TdP
 
 TODO:
 
     [ ] Add queries and ER structures of the 2 DBs
     [ ] Add DES code
-    [ ] Implement Java Time Management here?? 
+    [ ] Implement Java Time Management notes here??
+    [ ] Varie possibili query / codice per esplorare i due DB
 
 ## 🎒 Roba da portare / Todo prima dell'esame
 
@@ -26,36 +27,19 @@ TODO:
 ## 📝 Da controllare alla fine
 
 - Assicurati di aver definito `hashCode` e `equals` in ogni java bean
-- Pulisci il grafo ogni volta che fai clic sul pulsante "Crea grafo"
-- Pulisci dati dentro il Model e text field nel Controller se devono essere puliti durante l'esecuzione
-- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (vedi a *fine punto 1*)
-- Controlla attentamente le tabelle e la struttura del db utilizzata
+- Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
+- Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
+- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (vedi a ***fine punto 1***)
+- Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
 - Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
 - Fai dichiarazioni di Sysout pulite per debuggare sul momento, ma non spenderci troppo tempo
 - Usa `try (Connection conn = ...)` o chiudi `conn` alla fine di ogni blocco `try`
-  
-```java
-/*
- *  try(...) si chiama try-with-resources, 
- *  è un tipo di comando try aggiunto in java 7 che chiude 
- *  automaticamente l'oggetto dichiarato al suo interno una volta che il
- *  blocco try è terminato (utilizzando il suo relativo metodo .close()),
- *  è una soluzione più solida e sicura di chiamare il comando .close() manualmente
- *  in quanto, anche se viene lanciato un errore o eccezione, tale oggetto verrà chiuso lo stesso
- *  Nota: try-w-resources funziona solo se la classe dell'ogetto che viene richiamato dentro le parentesi 
- *  implementa l'interfaccia AutoCloasble: Connection infatti la implementa come è visibile nelle seguenti risorse
- *  Doc try-w-resources: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
- *  Doc Connection implementa AutoClosable: https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
- *  StackOverflow che spiega il funzionamento di try-w-resources: https://stackoverflow.com/questions/10115282/new-strange-java-try-syntax#answers
- */
-```
-
 - Eventualmente dichiara la complessità di ogni algoritmo che pensi meriti di essere citato (solo per mostrare che sai che questi algoritmi potrebbero non essere ottimali)
   - Se hai tempo forse puoi fare un controllo tic-toc da qualche parte
 - Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
 
 ***Note***
-> :zap: La seconda parte dell'esame non sarà valutata (solo) sulla base dei semplici output che il tuo algoritmo fa ma anche sulla logica che hai implementato, se per esempio il tuo algoritmo ricorsivo "esplode" facilmente non farti prendere dal panico, sarà lecito lo stesso e verrà valutato solo se ci sono delle vere e proprie fallacie logiche!
+> :zap: Non preoccuparti se il tempo per generare una soluzione richiesta all'esame è alto, ai professori basta che funzioni. La seconda parte dell'esame non sarà valutata (solo) sulla base dei semplici output che il tuo algoritmo fa ma anche sulla logica che hai implementato, se per esempio il tuo algoritmo ricorsivo "esplode" facilmente non farti prendere dal panico, sarà lecito lo stesso e verrà valutato solo se ci sono delle vere e proprie fallacie logiche!
 
 ## 📖 Prima Parte: DAO, JDBC, jGraphs (+ JavaFX, MVC, ConnectionPooling, Best Practices, ...)
 
@@ -100,9 +84,8 @@ public void buildGraph() -> {
 
 ### 2 Make Queries
 
-| :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much the same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with for-inner-fors; sometimes this last approach can be easier! |
+| :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with for-inner-fors; sometimes this last approach can be easier! |
 |------------------------------------------------------------------------------------------------------|
-
 
 - Watch out for Double Couples and Self Couples! --> If the graph is oriented, weighted or do not alow self-loop this could broke your code!
 - Do not make super-hard queries, in case it happens ask teachers!
@@ -112,18 +95,23 @@ public void buildGraph() -> {
 Watch out for *self-loops* and *double-pairs*!
 
 ```sql
-    SELECT e1.object_id AS o1, e2.object_id AS o2, COUNT(*) AS weight
-    FROM exhibition_objects e1, exhibition_objects e2
-    WHERE e1.exhibition_id = e2.exhibition_id
-    AND e1.object_id > e2.object_id -- Double pair (and thus, self-loops) avoided :)
-    GROUP BY o1, o2
+SELECT s1.Retailer_code AS s1, s2.Retailer_code AS s2, COUNT(DISTINCT s1.Product_number) AS m
+FROM go_daily_sales s1, go_daily_sales s2
+WHERE s1.Retailer_code IN (SELECT Retailer_code FROM go_retailers WHERE Country = "Germany")
+AND s2.Retailer_code IN (SELECT Retailer_code FROM go_retailers WHERE Country = "Germany")
+AND YEAR(s1.Date) = 2016
+AND YEAR(s2.Date) = 2016
+AND s1.Retailer_code < s2.Retailer_code -- Double pair (and thus, self-loops) avoided :)
+AND s1.Product_number = s2.Product_number
+GROUP BY s1.Retailer_code, s2.Retailer_code
+HAVING m >= 10
 ```
 
 ```sql
-    SELECT s1.playerID, s2.playerID, s1.teamID, s1.teamCode
-    FROM salaries s1, salaries s2
-    WHERE s1.teamID = s2.teamID
-    AND s1.playerID <> s2.playerID -- Self-loop avoided :)
+SELECT s1.playerID, s2.playerID, s1.teamID, s1.teamCode
+FROM salaries s1, salaries s2
+WHERE s1.teamID = s2.teamID
+AND s1.playerID <> s2.playerID -- Self-loop avoided :)
 ```
 
 ***Note***
@@ -240,60 +228,55 @@ If you want to make two pairs containing one (a, b) and the second (b, a) to loo
 
 1. Before saving the pair into the object, sort them in the constructor
 
-    ```java
-
-    public NodePair(Node a, Node b) {
-        super();
-        if (a.compareTo(B) > 0) { //or Integer.compareTo(a.getID(), b.getID())
-            this.a = a;
-            this.b = b;
-        } else {
-            this.a = b;
-            this.b = a;
-        }
+```java
+public NodePair(Node a, Node b) {
+    super();
+    if (a.compareTo(B) > 0) { //or Integer.compareTo(a.getID(), b.getID())
+        this.a = a;
+        this.b = b;
+    } else {
+        this.a = b;
+        this.b = a;
     }
+}
+```
 
-    ```
+2. Use specifc `equals()` and `hashCode()` methods
 
-2. Use specifc equals() and hashCode() methods
+```java
+@Override
+public int hashCode() {
 
-    ```java
+    // https://stackoverflow.com/questions/1536393/good-hash-function-for-permutations
 
-    @Override
-    public int hashCode() {
+    // XOR [ a.hashCode() ^ b.hashCode() ] , 
+    // or SUM [ a.hashCode() + b.hashCode() ] , 
+    // or MULTIPLY [ a.hashCode() * b.hashCode() ]
+    // or use abc's propose: hashNumbe = SUM[ R + 2*i ] / 2 
+    // where R is a arbitrary odd number > 1 and i is a generic element of the set
+    return (abc(a.hashCode()) + abc(b.hashCode()) / 2);
+}
 
-        // https://stackoverflow.com/questions/1536393/good-hash-function-for-permutations
+private double abc(int a) {
+    int R = 1779033703;
+    return R + 2*a;
+} 
 
-        // XOR [ a.hashCode() ^ b.hashCode() ] , 
-        // or SUM [ a.hashCode() + b.hashCode() ] , 
-        // or MULTIPLY [ a.hashCode() * b.hashCode() ]
-        // or use abc's propose: hashNumbe = SUM[ R + 2*i ] / 2 
-        // where R is a arbitrary odd number > 1 and i is a generic element of the set
-        return (abc(a.hashCode()) + abc(b.hashCode()) / 2);
-    }
+@Override
+public boolean equals(Object obj) {
+    if (this == obj)
+        return true;
+    if (obj == null)
+        return false;
+    if (getClass() != obj.getClass())
+        return false;
+    NodePair other = (NodePair) obj;
+    return ( Objects.equals(a, other.a) && Objects.equals(b, other.b) ) ||
+        ( Objects.equals(a, other.b) && Objects.equals(b, other.a) );
+}
+```
 
-    private double abc(int a) {
-        int R = 1779033703;
-        return R + 2*a;
-    } 
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        NodePair other = (NodePair) obj;
-        return ( Objects.equals(a, other.a) && Objects.equals(b, other.b) ) ||
-            ( Objects.equals(a, other.b) && Objects.equals(b, other.a) );
-    }
-
-
-    ```
-
-If instead you just need a simple NodePair class use the following standard java bean
+If instead you just need a simple NodePair class use the following standard Java Bean
 
 ```java
 public class NodePair {
@@ -479,6 +462,8 @@ Consider using HashSet in your code. The use of `HashSet` in your code depends o
 
     4. **Memory usage:** `HashSet` takes more memory than `ArrayList` because it needs to maintain a separate data structure (a hash table) to provide constant-time performance.
 
+    5. **No .get() method:** `Set` do not provide a .get() method to find a certain object in the set.
+
     In conclusion, you need to consider these factors based on the specific characteristics of your problem and data. The use of `HashSet` can be an improvement in some cases, but it could also be a disadvantage depending on your needs. Always consider the trade-offs before deciding.
 */
 
@@ -507,6 +492,11 @@ public List<Node> start(int limit) {
     this.bestNumber = 0;
     this.limit = limit; 
     List<Node> partial = new ArrayList<>();
+    // Se possibile prova anche a non effettuare una ricorsione
+    // su tutta la collezione che devi analizzare, potrebbe
+    // risultare più vantaggioso spezzetare tale collezione 
+    // nelle sue componenti e unire i risultati della ricorsione 
+    // su queste
     recursive(partial);
     return this.best;
 }
