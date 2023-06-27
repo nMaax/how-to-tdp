@@ -799,7 +799,7 @@ Here are some notable classes and methods that you might find useful:
         Graph<String, DefaultEdge> union = new AsGraphUnion<>(graph1, graph2);
         ```
 
-   2. **asMaskSubgraph**: This returns a live view of the subgraph of `g` induced by the vertices and edges that are unmasked by the vertexMask and edgeMask. If a vertex/edge is masked, it means that it is effectively removed from the subgraph. 
+   2. **asMaskSubgraph**: This returns a live view of the subgraph of `g` induced by the vertices and edges that are unmasked by the vertexMask and edgeMask. If a vertex/edge is masked, it means that it is effectively removed from the subgraph.
 
         ```java
         Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
@@ -880,7 +880,7 @@ Here are some notable classes and methods that you might find useful:
   
     - `getPaths`: The `getPaths(V sink)` method returns a list of all shortest paths from the source vertex to the sink vertex.
 
-9.  **BellmanFordInspector**: If you suspect that your graph might contain negative cycles and you want to check for their presence, you can use the `BellmanFordInspector` class provided by the jGraphT library. This class allows you to detect negative cycles in a graph. Here's an example of how you might use it:
+9. **BellmanFordInspector**: If you suspect that your graph might contain negative cycles and you want to check for their presence, you can use the `BellmanFordInspector` class provided by the jGraphT library. This class allows you to detect negative cycles in a graph. Here's an example of how you might use it:
 
     ```java
     Graph<Integer, DefaultWeightedEdge> graph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
