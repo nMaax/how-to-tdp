@@ -12,7 +12,6 @@ TODO:
   - File TXT con password Polito, password GitHub, e chiave SSH GitHub
 - :exclamation: Cellulare con password Polito e password GitHub + Autenticatore a 2 fattori etc.
 - :exclamation: Carta e penna
-- Auricolari e Acqua
 - Fai un backup dell'USB su WhatsAppWeb per recuperare i dati in caso di necessità
 - Prima dell'esame, apri una pagina di Google Chrome in modalità *incognito* e apri
   - [WhatsApp Web](https://web.whatsapp.com/)
@@ -26,19 +25,30 @@ TODO:
 - Assicurati di aver definito `hashCode` e `equals` in ogni java bean
 - Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
 - Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
-- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (vedi a ***fine punto 1***)
+- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***fine punto 1***)
 - Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
 - Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
 - Fai dichiarazioni di Sysout pulite per debuggare sul momento, ma non spenderci troppo tempo
-- Usa `try (Connection conn = ...)` o chiudi `conn` alla fine di ogni blocco `try`
-- Eventualmente dichiara la complessità di ogni algoritmo che pensi meriti di essere citato (solo per mostrare che sai che questi algoritmi potrebbero non essere ottimali)
-  - Se hai tempo forse puoi fare un controllo tic-toc da qualche parte
+- Usa `try (Connection conn = ...)` o :exclamation:**chiudi `conn`** alla fine di ogni blocco `try`
 - Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
 
 ***Note***
-> :zap: Non preoccuparti se il tempo per generare una soluzione richiesta all'esame è alto, ai professori basta che funzioni. La seconda parte dell'esame non sarà valutata (solo) sulla base dei semplici output che il tuo algoritmo fa ma anche sulla logica che hai implementato, se per esempio il tuo algoritmo ricorsivo "esplode" facilmente non farti prendere dal panico, sarà lecito lo stesso e verrà valutato solo se ci sono delle vere e proprie fallacie logiche!
+> :zap: Non preoccuparti se la complessità degli algoritmi per generare una soluzione richiesta all'esame è alta, ai professori basta che funzioni. La seconda parte dell'esame non sarà valutata (solo) sulla base dei semplici output che il tuo algoritmo fa ma anche sulla logica che hai implementato, se per esempio il tuo algoritmo ricorsivo "esplode" facilmente non farti prendere dal panico, sarà lecito lo stesso e verrà valutato solo se ci sono delle vere e proprie fallacie logiche!
 
 ## 📖 Prima Parte: DAO, JDBC, jGraphs (+ JavaFX, MVC, ConnectionPooling, Best Practices, ...)
+
+|:exclamation: ***Ogni volta che aggiorni il modello implementa subito i nuovi metodi nel Controller e testali! Pensa immediatamente a gestire gli errori di input*** :exclamation: |
+|---|
+
+Here is a simple list of usual things that could break your code:
+
+1. Inserting wrong type of data as input (int instead of a char or double instead of an int)
+2. Inserting data with spaces before, after or in between itself ("   69", "420  ", ...) as input
+3. Inserting nothing ("") as input
+4. Inserting data below a lower bound (e.g. negative numbers, lookout for limits in data range in the DB!)
+5. Inserting data above an upper bound (e.g. really large numbers, lookout for limits in data range in the DB!)
+6. Clicking buttons two or more times when each time data is not reseted (e.g. click two times "Make Graph" will load double vertex, edges, ...)
+7. Clicking some buttons when other have not already been clicked (e.g. click "Find shortest path" when the user didnt already click "Make graph") - Hint: Use ```javafx.obj.setDisable(false | true)```
 
 ### 1. Skeleton of model
 
@@ -81,10 +91,10 @@ public void buildGraph() {
 
 ### 2 Make Queries
 
-| :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with for-inner-fors; sometimes this last approach can be easier! |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with inner-fors; sometimes this last approach can be easier! |
+| --- |
 
-- Watch out for Double Couples and Self Couples! --> If the graph is oriented, weighted or do not alow self-loop this could broke your code!
+- Watch out for **Double Couples** and **Self Couples**! --> If the graph is oriented, weighted or do not alow self-loop this could broke your code!
 - Do not make super-hard queries, in case it happens ask teachers!
 - Make sure to work on the right tables and data
 - Check that both on java and on sql you get the right cardinality of the collection (Collection.size() and the number of rows in HeidiSQL must coincide)
@@ -114,7 +124,9 @@ AND s1.playerID <> s2.playerID -- Self-loop avoided :)
 ***Note***
 > :zap: Double pair are automaticaly avoided if you use an undirected graph, but if possible avoid them directly in your query/dao to make a cleaner code!
 
-### 2.5 Create unimplementhed DAO methods and Edge Auxiliary Class
+### 2.5 Create unimplementhed DAO methods and (eventually) an edge auxiliary class
+
+> :bulb: Consider that the jGraphT library provieds a pre-made Edge auxiliary class called [*Pair*](https://jgrapht.org/javadoc/org.jgrapht.core/org/jgrapht/alg/util/Pair.html)
 
 ```java
 
@@ -142,7 +154,7 @@ AND s1.playerID <> s2.playerID -- Self-loop avoided :)
     }
  
  * try-with-resources è più sicuro!
- * come specificato nella stessa documentazione di java, 
+ * come specificato nella stessa documentazione di java
  * disponibile qui: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html#:~:text=However%2C%20this%20example,your%20program%27s%20resources.
  */
 ```
@@ -221,7 +233,7 @@ void Collection<NodePair> loadEdges(Map<Integer, Node> idMap, ...) {
 | :exclamation:  Remember to define `hashCode` and `equals` (and eventually `compareTo`) in each new Java Bean you define, just in case |
 | ------------------------------------------------------------------------------------------------------------------------------------- |
 
-If you want to make two pairs containing one (a, b) and the second (b, a) to look the same from .equals() and hashCode() perspective consider the following options:
+If you want to make two pairs containing one (a, b) and the second (b, a) to look the same from `equals()` and `hashCode()` perspective consider the following options:
 
 1. Before saving the pair into the object, sort them in the constructor
 
@@ -273,7 +285,7 @@ If you want to make two pairs containing one (a, b) and the second (b, a) to loo
     }
     ```
 
-    If instead you just need a simple NodePair class use the following standard Java Bean
+    If instead you just need a simple NodePair class use the following standard Java Bean (*or the jGraphT [Pair](https://jgrapht.org/javadoc/org.jgrapht.core/org/jgrapht/alg/util/Pair.html) class*)
 
     ```java
     public class NodePair {
@@ -320,28 +332,16 @@ If you want to make two pairs containing one (a, b) and the second (b, a) to loo
     }
     ```
 
-### 2.5.5 Test DAO Methods (if you need idMaps to test these methods make idMaps Getters in the model!)
-
-```java
-Model m = new Model();
-m.buildGraph();
-
-DAO dao = new DAO();
-
-List<NodePair> nodes = dao.loadEdges(m.getIdMap(););
-System.out.println(nodes.size());
-```
-
 ### 3. Update buildGraph() with new DAO methods to load edges
 
 ```java
-void buildGraph() -> { 
+void buildGraph() { 
 
     // TODO Preliminar stuff ...
 
     loadNodes();
     Graphs.addAllVertices(Graph, allNodes);
-    System.out.println(...) // "> Caricati i nodi nei vertici del grafo: " + graph.vertexSet().size()
+    System.out.println(...); // "> Caricati i nodi nei vertici del grafo: " + graph.vertexSet().size()
 
     // Load Edges
     for (NodePair p : dao.getNodePairs(..., idMap)) {
@@ -356,15 +356,10 @@ void buildGraph() -> {
 }
 ```
 
-### 3.5 Test buildGraph
+### 5. Implement logical operation on graphs (DepthFirstIterator, BreadthFirst, ConnectivityInspector, ...)
 
-```java
-Model m = new Model();
-m.loadPeople();
-m.buildGraph();
-```
+#### Sample DepthFirstIterator | BreadthFirst manual implementation
 
-### 4. Implement logical operation on graphs (DepthFirstIterator, BreadthFirst, ConnectivityInspector, ...)
 
 ```java
 // Sample DepthFirstIterator | BreadthFirst manual implementation
@@ -378,6 +373,8 @@ while (iterator.hasNext())
 return result;
 
 ```
+
+#### Sample findPath algorithm using a BreadthFirstIterator
 
 ```java
 
@@ -410,6 +407,8 @@ public findPath(Node source, Node sink) {
 }
 ```
 
+#### Sample ConnectivityInspector implementation
+
 ```java
 // Sample ConnectivityInspector implementation
 
@@ -418,21 +417,7 @@ return new ArrayList<>(inspector.connectedSetOf(rootNode));
 
 ```
 
-### 4.5 Test logical operations on the graph
-
-### 5. Implement these new methods on the controller (check bad inputs, errors and data-cleaning procedures on the controller!)
-
-Here is a simple list of usual things that could break your code:
-
-1. Inserting wrong type of data as input (int instead of a char or double instead of an int)
-2. Inserting data with spaces before, after or in between itself ("   69", "420  ", ...) as input
-3. Inserting nothing ("") as input
-4. Inserting data below a lower bound (e.g. negative numbers, lookout for limits in data range in the DB!)
-5. Inserting data above an upper bound (e.g. really large numbers, lookout for limits in data range in the DB!)
-6. Clicking buttons two or more times when each time data is not reseted (e.g. click two times "Make Graph" will load double vertex, edges, ...)
-7. Clicking some buttons when other have not already been clicked (e.g. click "Find shortest path" when the user didnt already click "Make graph") - Hint: Use ```javafx.obj.setDisable(false | true)```
-
-### 6. Eventually make getters for each attribute of the model class made so far
+### 7. Eventually make getters for each attribute of the model class made so far
 
 Model -> `getAllPeople`, `getIdMap`, `getGraph`, ...
 
@@ -440,7 +425,7 @@ Make model unmutable and do not make getter for stuff you dont want to show, use
 
 ## 🐍 Seconda Parte: Algoritmo di Ricorsione o Simulatore ad Eventi Discreti
 
-### 7. Combinatory Recursion Algorithm
+### 8. Combinatory Recursion Algorithm
 
 
 ```java
@@ -558,7 +543,7 @@ public boolean filter(List<Node> partial, Node n) {
 
 ```
 
-### 8. Discrete Event Simulator
+### 9. Discrete Event Simulator
 
 ### Simulator class
 
