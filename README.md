@@ -1,5 +1,19 @@
 # 📝 How To TdP
 
+## Table of Contents
+
+1. [Roba da portare / Todo prima dell'esame](#-roba-da-portare--todo-prima-dellesame)
+2. [Da controllare alla fine](#-da-controllare-alla-fine)
+3. [Prima Parte](#-prima-parte-dao-jdbc-jgraphs--javafx-mvc-connectionpooling-best-practices-)
+4. [Seconda Parte](#-seconda-parte-algoritmo-di-ricorsione-o-simulatore-ad-eventi-discreti)
+   1. [Ricorsione](#-combinatory-recursion-algorithm)
+   2. [Simulatore](#-discrete-event-simulator)
+5. [Extra material](#-extra-material)
+   1. [Java Time Management table](#java-time-management-table)
+   2. [SQL Tips and Tricks](#sql-tips-and-tricks)
+   3. [jGraphT useful Classes](#jgrapht-useful-classes)
+   4. [Java Sets useful operations](#java-sets-useful-operations)
+
 ## 🎒 Roba da portare / Todo prima dell'esame
 
 - Pubblica su GitHub tutti i progetti che vuoi controllare durante l'esame e pinnali nella homepage
@@ -417,7 +431,7 @@ Make model unmutable and do not make getter for stuff you dont want to show, use
 
 ## 🐍 Seconda Parte: Algoritmo di Ricorsione o Simulatore ad Eventi Discreti
 
-### 8. Combinatory Recursion Algorithm
+### Combinatory Recursion Algorithm
 
 ```java
 // Schema from teachers
@@ -535,7 +549,7 @@ public boolean filter(List<Node> partial, Node n) {
 
 ```
 
-### 9. Discrete Event Simulator
+### Discrete Event Simulator
 
 ### Simulator class
 
