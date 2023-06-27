@@ -1,10 +1,5 @@
 # 📝 How To TdP
 
-TODO:
-
-    [ ] Varie possibili query / codice per esplorare i due DB
-    [ ] Sql tips and tricks
-
 ## 🎒 Roba da portare / Todo prima dell'esame
 
 - Pubblica su GitHub tutti i progetti che vuoi controllare durante l'esame e pinnali nella homepage
