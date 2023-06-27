@@ -20,12 +20,11 @@
 
 - Assicurati di aver definito `hashCode` e `equals` in ogni java bean
 - Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
-- Pulisci i dati pgmo volta che premi il pulsante "*Simula*" o "*Avvia ricorsione*"
+- Pulisci i dati relativi a Simulatore e Ricorsione ogni volta che premi il pulsante "*Simula*" o "*Avvia ricorsione*"
 - Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
 - Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***fine punto 1***)
 - Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
 - Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
-- Fai dichiarazioni di Sysout pulite per debuggare sul momento, ma non spenderci troppo tempo
 - Usa `try (Connection conn = ...)` o :exclamation:**chiudi `conn`** alla fine di ogni blocco `try`
 - Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
 
@@ -358,7 +357,6 @@ void buildGraph() {
 
 #### Sample DepthFirstIterator | BreadthFirst manual implementation
 
-
 ```java
 // Sample DepthFirstIterator | BreadthFirst manual implementation
 
@@ -368,7 +366,6 @@ DepthFirstIterator<Node, DefaultEdge> iterator =
 List<Node> result = new ArrayList<>();
 while (iterator.hasNext()) result.add(iterator.next());
 return result;
-
 ```
 
 #### Sample findPath algorithm using a BreadthFirstIterator
@@ -410,7 +407,6 @@ public findPath(Node source, Node sink) {
 
 ConnectivityInspector<Node, DefaultEdge> inspector = new ConnectivityInspector<>(graph);
 return new ArrayList<>(inspector.connectedSetOf(rootNode));
-
 ```
 
 ### 7. Eventually make getters for each attribute of the model class made so far
@@ -423,12 +419,11 @@ Make model unmutable and do not make getter for stuff you dont want to show, use
 
 ### 8. Combinatory Recursion Algorithm
 
-
 ```java
 // Schema from teachers
 
 /*
-Consider using HashSet in your code. The use of `HashSet` in your code depends on the requirements of your algorithm and the characteristics of the data you're working with. Here are a few points to consider:
+Consider using HashSet and their sets' operations in your code to improve computational speed. The use of `HashSet` in your code depends on the requirements of your algorithm and the characteristics of the data you're working with. Here are a few points to consider:
 
     1. **Duplicate checking:** If you need to check for duplicates frequently, a `HashSet` could provide a performance improvement because it offers O(1) complexity for the `contains` operation, while an `ArrayList` offers O(n) complexity. However, in your current pseudocode, I don't see a need for such operation.
 
@@ -546,7 +541,6 @@ public boolean filter(List<Node> partial, Node n) {
 
 ```java
 // Personal Schema
-
 public class Simulator {
     
     // Input data
@@ -574,19 +568,22 @@ public class Simulator {
         // Set inputs 
         this.inputData = inputData;
 
-        // Set default data
+        // Set default data (WIP, costraints, outputs, ...)
         this.defaultData // = ...;
 
         // Build the queue
         this.queue = new PriorityQueue<>();
-
     }
     
     // Setters for default data
-    // TODO
+    public void setDefaultData() {
+        // TODO
+    }
 
     // Getters for output data
-    // TODO
+    public OutputData getOutputData() {
+        // TODO
+    } 
     
     public void init() {
 
@@ -608,7 +605,7 @@ public class Simulator {
     public void run() {
         while (!queue.isEmpty()) {
 
-            // Poll event
+            // Poll an event
             Event e = queue.poll();
             
             // Extracts Time, Type and EventData
@@ -693,14 +690,11 @@ public class Event implements Comparable<Event>{
 #### EventType enum
 
 ```java
-
 public enum EventType {
-    
     DEFAULT_TYPE,
     ALT_TYPE
     // ...
 }
-
 ```
 
 ## 🙌 Extra material
@@ -711,7 +705,7 @@ public enum EventType {
 |--------|--------------------------------|-------------|
 `DATE` | `Date` (sub of java.util.Date) | `LocalDate` |
 `DATETIME` | `Timestamp` (sub of java.util.Date) | `LocalDateTime` |
-`TIMESTAMP` (*mySQL only*)
+`TIMESTAMP` (*mySQL only*) | :x: | :x: |
 
 > ***Note*** You can convert from *java.sql* to *java.time* with `.toLocalDate()` method
 
@@ -779,64 +773,64 @@ public enum EventType {
 
 Sure, Java's `Set` interface doesn't directly provide methods for set operations such as union, intersection, or difference. However, we can perform these operations by using methods from the `Set` interface and `java.util.Collections` class, and also from Java 8's Stream API. Here are some examples:
 
-1. **Union** - The union of two sets is a new set that contains all the elements from both sets. 
+1. **Union** - The union of two sets is a new set that contains all the elements from both sets.
 
-```java
-Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
-Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+    ```java
+    Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+    Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
 
-// Union
-Set<Integer> union = new HashSet<>(set1);
-union.addAll(set2);
-```
+    // Union
+    Set<Integer> union = new HashSet<>(set1);
+    union.addAll(set2);
+    ```
 
 2. **Intersection** - The intersection of two sets is a new set that contains only the elements that are in both sets.
 
-```java
-Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
-Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+    ```java
+    Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+    Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
 
-// Intersection
-Set<Integer> intersection = new HashSet<>(set1);
-intersection.retainAll(set2);
-```
+    // Intersection
+    Set<Integer> intersection = new HashSet<>(set1);
+    intersection.retainAll(set2);
+    ```
 
 3. **Difference (Subtraction)** - The difference of two sets is a new set that contains elements in the first set but not in the second.
 
-```java
-Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
-Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+    ```java
+    Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+    Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
 
-// Difference
-Set<Integer> difference = new HashSet<>(set1);
-difference.removeAll(set2);
-```
+    // Difference
+    Set<Integer> difference = new HashSet<>(set1);
+    difference.removeAll(set2);
+    ```
 
 4. **Symmetric Difference** - The symmetric difference of two sets is a new set that contains elements that are in one of the sets, but not in their intersection.
 
-```java
-Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
-Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+    ```java
+    Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+    Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
 
-// Symmetric Difference
-Set<Integer> difference1 = new HashSet<>(set1);
-difference1.removeAll(set2);
+    // Symmetric Difference
+    Set<Integer> difference1 = new HashSet<>(set1);
+    difference1.removeAll(set2);
 
-Set<Integer> difference2 = new HashSet<>(set2);
-difference2.removeAll(set1);
+    Set<Integer> difference2 = new HashSet<>(set2);
+    difference2.removeAll(set1);
 
-Set<Integer> symmetricDifference = new HashSet<>(difference1);
-symmetricDifference.addAll(difference2);
-```
+    Set<Integer> symmetricDifference = new HashSet<>(difference1);
+    symmetricDifference.addAll(difference2);
+    ```
 
 5. **Subset** - To check if a set is a subset of another (i.e., all elements of the first set are in the second set), you can use the `containsAll()` method.
 
-```java
-Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
-Set<Integer> set2 = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5));
+    ```java
+    Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+    Set<Integer> set2 = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5));
 
-// Subset
-boolean isSubset = set2.containsAll(set1);
-```
+    // Subset
+    boolean isSubset = set2.containsAll(set1);
+    ```
 
 Remember, in set operations, the resulting sets do not contain duplicate elements, because the `Set` interface in Java doesn't allow duplicates.
