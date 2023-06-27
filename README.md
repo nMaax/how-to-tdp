@@ -157,7 +157,7 @@ AND s1.playerID <> s2.playerID -- Self-loop avoided :)
 ```
 
 ```java
-void Collection<Stuff> loadStuff(Map<Integer, Node> idMap, ...) {
+public void Collection<Stuff> loadStuff(Map<Integer, Node> idMap, ...) {
 
     String sql = "SELECT s.playerID "
                 + "FROM salaries s "
@@ -191,7 +191,7 @@ void Collection<Stuff> loadStuff(Map<Integer, Node> idMap, ...) {
 
 ```java
 
-void Collection<NodePair> loadEdges(Map<Integer, Node> idMap, ...) {
+public void Collection<NodePair> loadEdges(Map<Integer, Node> idMap, ...) {
     
     String sql = "SELECT g1.playerID g1, g2.playerID g2 "
             + "FROM appearances g1, appearances g2 "
