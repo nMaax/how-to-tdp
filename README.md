@@ -869,7 +869,7 @@ Remember, these are just a few of the methods and classes available in the jGrap
 
 ### Java Sets useful operations
 
-Sure, Java's `Set` interface doesn't directly provide methods for set operations such as union, intersection, or difference. However, we can perform these operations by using methods from the `Set` interface and `java.util.Collections` class, and also from Java 8's Stream API. Here are some examples:
+Java's `Set` interface doesn't directly provide methods for set operations such as union, intersection, or difference. However, we can perform these operations by using methods from the `Set` interface and `java.util.Collections` class, and also from Java 8's Stream API. Here are some examples:
 
 1. **Union** - The union of two sets is a new set that contains all the elements from both sets.
 
