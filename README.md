@@ -769,6 +769,104 @@ public enum EventType {
 
   21. `SYSDATE()`: Returns the time at which the function executes.
 
+### jGraphT useful Classes
+
+Here are some notable classes and methods that you might find useful:
+
+1. **asSomething**: This is a collections of classes that provides some useful "conversions" of a graph in something elese:
+
+   1. **asGraphUnion**: This method returns a graph view that is the union (disjoint) of several graphs.
+
+   2. **asMaskSubgraph**: This method creates a masked subgraph.
+
+   3. **asUndirectedGraph**: This method creates an undirected view over a directed graph.
+
+   4. **asDirectedGraph**: This method creates a directed view over an undirected graph.
+
+   5. **asUnmodifiableGraph**: This method creates an unmodifiable view of a graph.
+
+   6. **asWeightedGraph**: This method creates a weighted view over a graph.
+
+   7. **asSubgraph**: This method creates a subgraph induced by a subset of vertices and/or edges.
+
+   8. **asSpannerGraph**: This method creates a spanner graph view. 
+
+2. **GraphPath**: This represents a path in a graph. It doesn't have methods for modifying the graph, but it does have methods for querying the path such as `getEdgeList()`, `getVertexList()`, `getWeight()`, etc.
+
+3. **ConnectivityInspector**: This class helps in checking the connectivity of a graph.
+
+    - `isGraphConnected()`: Checks if the entire graph is connected.
+
+4. **DepthFirstIterator**: This is an iterator for traversing the graph in depth-first order. You initialize it with a graph and a starting vertex, then call `next()` to get the next vertex in the depth-first sequence.
+
+5. **BreadthFirstIterator**: Similar to `DepthFirstIterator`, but for breadth-first traversal.
+
+6. **FloydWarshallShortestPaths**: This class implements the Floyd-Warshall algorithm for finding all pairs shortest paths.
+
+    - `shortestDistance(sourceVertex, targetVertex)`: This method returns the shortest path from sourceVertex to targetVertex.
+
+7. **DijkstraShortestPath**: This class implements Dijkstra's shortest path algorithm.
+
+    - `findPathBetween(graph, startVertex, endVertex)`: Finds the shortest path between startVertex and endVertex using Dijkstra's algorithm.
+
+8. **BellmanFordShortestPath**: is an implementation of the Bellman-Ford algorithm, which computes the shortest paths from a source vertex to all other vertices in a weighted graph, even when some of the edge weights are negative. It can also detect negative cycles.
+
+    - `getPath`: The `getPath(V sink)` method returns the shortest path from the source vertex to the sink vertex.
+
+    - `getPathEdgeList`: The `getPathEdgeList(V sink)` method returns the edges making up the shortest path from the source vertex to the sink vertex.
+
+    - `getCost`: The `getCost(V sink)` method returns the cost of the shortest path from the source vertex to the sink vertex.
+  
+    - `getPaths`: The `getPaths(V sink)` method returns a list of all shortest paths from the source vertex to the sink vertex.
+
+9. **BellmanFordInspector**: If you suspect that your graph might contain negative cycles and you want to check for their presence, you can use the `BellmanFordInspector` class provided by the jGraphT library. This class allows you to detect negative cycles in a graph. Here's an example of how you might use it:
+
+    ```java
+    Graph<Integer, DefaultWeightedEdge> graph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+    // populate your graph here...
+
+    BellmanFordInspector<Integer, DefaultWeightedEdge> inspector = new BellmanFordInspector<>(graph);
+    boolean hasNegativeCycle = inspector.hasNegativeCycle();
+
+    if (hasNegativeCycle) {
+        System.out.println("Graph contains a negative weight cycle");
+        Set<DefaultWeightedEdge> negativeCycle = inspector.getNegativeCycle();
+        // handle the negative cycle...
+    } else {
+        System.out.println("Graph does not contain a negative weight cycle");
+    }
+    ```
+
+    In this example, `hasNegativeCycle()` checks if there's a negative cycle in the graph, and `getNegativeCycle()` returns one such cycle if it exists. The returned cycle is represented as a set of `DefaultWeightedEdge` objects, and you can further examine these edges if needed. Note that `getNegativeCycle()` returns null if there's no negative cycle in the graph.
+
+    Remember that the `BellmanFordInspector` class assumes that the graph is a simple directed graph and the edge weights are numbers. If these assumptions don't hold for your graph, you might need to use a different algorithm or modify the graph accordingly.
+
+10. **KruskalMinimumSpanningTree**: This class represents a minimum spanning tree/forest of a graph. It uses Kruskal's algorithm.
+
+    - `getEdgeSet()`: This method returns a set of edges included in a minimum spanning tree.
+
+11. **GraphMetrics**: GraphMetrics is a utility class that provides various methods to compute different metrics of a graph. Here are its key methods:
+
+    - `getDiameter(Graph<V, E> graph)`: Computes and returns the diameter of the graph. The diameter is the maximum eccentricity of any vertex.
+
+    - `getRadius(Graph<V, E> graph)`: Computes and returns the radius of the graph. The radius is the minimum eccentricity of any vertex.
+
+    - `getEccentricity(Graph<V, E> graph, V vertex)`: Computes and returns the eccentricity of a specified vertex. The eccentricity of a vertex is defined as the maximum shortest path length to any other vertex.
+
+    - `getGirth(Graph<V, E> graph)`: Computes and returns the girth of the graph. The girth is the length of the shortest cycle contained in the graph.
+
+12. **CycleDetector**: This class uses depth-first search to detect cycles in a graph. Here are its key methods:
+
+    - `CycleDetector(Graph<V, E> graph)`: Constructs a cycle detector for a specified graph.
+
+    - `detectCycles()`: Detects if the graph contains a cycle. Returns true if the graph contains at least one cycle, and false otherwise.
+
+    - `findCycles()`: Finds and returns a set of all vertices which participate in any cycle.
+
+    - `findCyclesContainingVertex(V v)`: Finds and returns a set of all vertices that can be reached by starting from the specified vertex and following a cycle.
+
+Remember, these are just a few of the methods and classes available in the jGraphT library. For a comprehensive overview of all functionalities, refer to the official jGraphT API documentation.
+
 ### Java Sets useful operations
 
 Sure, Java's `Set` interface doesn't directly provide methods for set operations such as union, intersection, or difference. However, we can perform these operations by using methods from the `Set` interface and `java.util.Collections` class, and also from Java 8's Stream API. Here are some examples:
