@@ -3,6 +3,7 @@
 TODO:
 
     [ ] Varie possibili query / codice per esplorare i due DB
+    [ ] Sql tips and tricks
 
 ## 🎒 Roba da portare / Todo prima dell'esame
 
@@ -701,31 +702,89 @@ public enum EventType {
     
     DEFAULT_TYPE,
     ALT_TYPE
-    
+    // ...
 }
 
 ```
 
-### Extra material
+## 🙌 Extra material
 
-#### Java Time Management table
+### Java Time Management table
 
 | SQL | JDBC: *java.sql* | Model: *java.time* |
 |--------|--------------------------------|-------------|
-**DATE** | `Date` (sub of java.util.Date) | `LocalDate` |
-**DATETIME** | `Timestamp` (sub of java.util.Date) | `LocalDateTime` |
-**TIMESTAMP** (*mySQL only*)
+`DATE` | `Date` (sub of java.util.Date) | `LocalDate` |
+`DATETIME` | `Timestamp` (sub of java.util.Date) | `LocalDateTime` |
+`TIMESTAMP` (*mySQL only*)
 
 > ***Note*** You can convert from *java.sql* to *java.time* with `.toLocalDate()` method
 
-#### Database ER Models
+### Database ER Models
 
-##### Go Sales
+#### Go Sales
 
 [![gosales.png](https://i.postimg.cc/05KK7jFm/immagine.png)](https://postimg.cc/c6ZJSxs4)
 
-##### Lahmans Baseball
+#### Lahmans Baseball
 
-[![lahmansbaseballdb.png](https://i.postimg.cc/fb0Q84NH/immagine.png)](https://postimg.cc/Y4kPSsjg)
+[![lahmansbaseballdb.png](https://i.postimg.cc/zvWm867d/lahmansbaseballdb-tiny.png)](https://postimg.cc/V0YZF73M)
 
-#### Queries used during simulations and beyond
+### Queries used during simulations and beyond
+
+```sql
+-- Seleziona tutti i giocatori in
+SELECT *
+FROM salaries s 
+WHERE s.`year` = 2000
+AND s.salary > 100000
+```
+
+### SQL Tips and Tricks
+
+- `COUNT(DISTINCT ...)` è diverso da `COUNT(...)`
+- Usa `>` o `<` per avere coppie uniche
+- Per calcolare delle medie puoi anche usare `SUM` e `COUNT` invece di `AVG`
+- Per non sporcare il codice con troppi join puoi usare anche `IN (SELECT ... FROM ...)`
+- Esistono varie utilità per gestire le date in MariaDB
+
+  1. `NOW()`: Returns the current date and time.
+
+  2. `CURDATE()`, `CURRENT_DATE()`: Returns the current date.
+
+  3. `CURTIME()`, `CURRENT_TIME()`: Returns the current time.
+
+  4. `DATE()`: Extracts the date part of a date or datetime expression.
+
+  5. `TIME()`: Extracts the time part of a date or datetime expression.
+
+  6. `YEAR()`, `MONTH()`, `DAY()`: Extracts the year, month, or day from a date or datetime expression.
+
+  7. `HOUR()`, `MINUTE()`, `SECOND()`: Extracts the hour, minute, or second from a time or datetime expression.
+
+  8. `DATEDIFF()`: Returns the number of days between two dates.
+
+  9. `TIMEDIFF()`: Returns the time difference between two times.
+
+  10. `DATE_ADD()`, `DATE_SUB()`: Adds or subtracts a specified time interval from a date.
+
+  11. `STR_TO_DATE()`: Converts a string to a date.
+
+  12. `DATE_FORMAT()`: Formats a date as a string.
+
+  13. `UNIX_TIMESTAMP()`: Converts a date or datetime expression to Unix timestamp.
+
+  14. `FROM_UNIXTIME()`: Converts Unix timestamp to a date or datetime.
+
+  15. `DAYOFWEEK()`: Returns the weekday index for a date (1 = Sunday, 2 = Monday, …, 7 = Saturday).
+
+  16. `DAYOFYEAR()`: Returns the day of the year for a date.
+
+  17. `WEEK()`: Returns the week number for a date.
+
+  18. `QUARTER()`: Returns the quarter of the year for a date.
+
+  19. `EXTRACT()`: Extracts a part of a date.
+
+  20. `PERIOD_ADD()`, `PERIOD_DIFF()`: Adds or subtracts a specified number of months to a period format (YYMM or YYYYMM).
+
+  21. `SYSDATE()`: Returns the time at which the function executes.
