@@ -1,6 +1,6 @@
 # 📝 How To TdP
 
-## Table of Contents
+## ✍️ Table of Contents
 
 1. [Roba da portare / Todo prima dell'esame](#-roba-da-portare--todo-prima-dellesame)
 2. [Da controllare alla fine](#-da-controllare-alla-fine)
@@ -789,21 +789,68 @@ Here are some notable classes and methods that you might find useful:
 
 1. **asSomething**: This is a collections of classes that provides some useful "conversions" of a graph in something elese:
 
-   1. **asGraphUnion**: This method returns a graph view that is the union (disjoint) of several graphs.
+   Certainly, I'll give a brief description of each method and provide code examples. Note that these examples are assuming that you've already defined your `Graph` object.
 
-   2. **asMaskSubgraph**: This method creates a masked subgraph.
+   1. **asGraphUnion**: Creates a new graph that is the union of multiple graphs. In the resulting graph, the vertex set is the disjoint union of the vertex sets of all graphs, and the edge set is the disjoint union of all edges sets of all graphs.
 
-   3. **asUndirectedGraph**: This method creates an undirected view over a directed graph.
+        ```java
+        Graph<String, DefaultEdge> graph1 = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> graph2 = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> union = new AsGraphUnion<>(graph1, graph2);
+        ```
 
-   4. **asDirectedGraph**: This method creates a directed view over an undirected graph.
+   2. **asMaskSubgraph**: This returns a live view of the subgraph of `g` induced by the vertices and edges that are unmasked by the vertexMask and edgeMask. If a vertex/edge is masked, it means that it is effectively removed from the subgraph. 
 
-   5. **asUnmodifiableGraph**: This method creates an unmodifiable view of a graph.
+        ```java
+        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> maskedSubgraph = new AsMaskSubgraph<>(graph, v -> v.equals("something"), e -> e.equals("something"));
+        ```
 
-   6. **asWeightedGraph**: This method creates a weighted view over a graph.
+   3. **asUndirectedGraph**: This returns an undirected view of the specified graph.
 
-   7. **asSubgraph**: This method creates a subgraph induced by a subset of vertices and/or edges.
+        ```java
+        DirectedGraph<String, DefaultEdge> directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> undirectedGraph = new AsUndirectedGraph<>(directedGraph);
+        ```
 
-   8. **asSpannerGraph**: This method creates a spanner graph view. 
+   4. **asDirectedGraph**: This returns a directed view of the specified undirected graph.
+
+        ```java
+        Graph<String, DefaultEdge> undirectedGraph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+        DirectedGraph<String, DefaultEdge> directedGraph = new AsDirectedGraph<>(undirectedGraph);
+        ```
+
+   5. **asUnmodifiableGraph**: This returns an unmodifiable view of the specified graph.
+
+        ```java
+        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> unmodifiableGraph = new AsUnmodifiableGraph<>(graph);
+        ```
+
+   6. **asWeightedGraph**: This returns a weighted view of the specified graph.
+
+        ```java
+        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        WeightedGraph<String, DefaultEdge> weightedGraph = new AsWeightedGraph<>(graph, new HashMap<>());
+        ```
+
+   7. **asSubgraph**: This returns a view on the graph as a subgraph specified by a subset of vertices and/or edges.
+
+        ```java
+        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Set<String> vertexSubset = new HashSet<>(Arrays.asList("vertex1", "vertex2"));
+        Graph<String, DefaultEdge> subgraph = new AsSubgraph<>(graph, vertexSubset);
+        ```
+
+   8. **asSpannerGraph**: This returns a spanner graph view of the specified graph, using a specific spanner algorithm.
+
+        ```java
+        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        SpannerAlgorithm<DefaultEdge> algo = new GreedyMultiplicativeSpanner<>(graph);
+        SpannerGraph<String, DefaultEdge> spannerGraph = new AsSpannerGraph<>(graph, algo.getSpanner());
+        ```
+
+   Please remember to add the necessary import statements depending on which classes you use, and make sure to create and populate your graphs before using these methods. This is just an illustrative example and may not run correctly without additional context.
 
 2. **GraphPath**: This represents a path in a graph. It doesn't have methods for modifying the graph, but it does have methods for querying the path such as `getEdgeList()`, `getVertexList()`, `getWeight()`, etc.
 
@@ -833,7 +880,7 @@ Here are some notable classes and methods that you might find useful:
   
     - `getPaths`: The `getPaths(V sink)` method returns a list of all shortest paths from the source vertex to the sink vertex.
 
-9. **BellmanFordInspector**: If you suspect that your graph might contain negative cycles and you want to check for their presence, you can use the `BellmanFordInspector` class provided by the jGraphT library. This class allows you to detect negative cycles in a graph. Here's an example of how you might use it:
+9.  **BellmanFordInspector**: If you suspect that your graph might contain negative cycles and you want to check for their presence, you can use the `BellmanFordInspector` class provided by the jGraphT library. This class allows you to detect negative cycles in a graph. Here's an example of how you might use it:
 
     ```java
     Graph<Integer, DefaultWeightedEdge> graph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
