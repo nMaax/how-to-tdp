@@ -25,6 +25,7 @@ TODO:
 
 - Assicurati di aver definito `hashCode` e `equals` in ogni java bean
 - Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
+- Pulisci i dati pgmo volta che premi il pulsante "*Simula*" o "*Avvia ricorsione*"
 - Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
 - Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***fine punto 1***)
 - Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
@@ -75,7 +76,7 @@ private void loadNodes() {
         this.allNodes = this.dao.getAllNodes;
         for (Node n : this.allNodes) this.idMap.put(n.getId(), n); 
     }
-    System.out.println(...) // "> Caricati tutti i NODI" + allNodes.size() + " | " + nodeIdMap.keySet().size()
+    System.out.println(...); // "> Caricati tutti i NODI" + allNodes.size() + " | " + nodeIdMap.keySet().size()
 }
 
 public void buildGraph() {
@@ -86,6 +87,7 @@ public void buildGraph() {
     loadNodes();
     Graphs.addAllVertices(Graph, allNodes);
     System.out.println(...); // "> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size()
+
     //TODO load Edges
 }
 ```
@@ -352,7 +354,7 @@ void buildGraph() {
         //if (!graph.containsVertex(n2)) graph.addVertex(n2);
         graph.addEdge(n1, n2);
     }
-    System.out.println(...) // "> Caricati gli archi del grafo: " + graph.edgeSet().size()
+    System.out.println(...); // "> Caricati gli archi del grafo: " + graph.edgeSet().size()
 
 }
 ```
@@ -369,8 +371,7 @@ DepthFirstIterator<Node, DefaultEdge> iterator =
                 new DepthFirstIterator<>(graph, rootNode);
 
 List<Node> result = new ArrayList<>();
-while (iterator.hasNext())
-    result.add(iterator.next());
+while (iterator.hasNext()) result.add(iterator.next());
 return result;
 
 ```
@@ -378,7 +379,6 @@ return result;
 #### Sample findPath algorithm using a BreadthFirstIterator
 
 ```java
-
 // Sample findPath algorithm using a BreadthFirstIterator
 
 public findPath(Node source, Node sink) {
@@ -397,7 +397,7 @@ public findPath(Node source, Node sink) {
     percorso.add(sink);
     DefaultEdge e = iterator.getSpanningTreeEdge(currentNode);
 
-    while (e != null) {s
+    while (e != null) {
         Node befNode = Graphs.getOppositeVertex(graph, e, currentNode);    
         // Add at index 0 in order to don't have a list backwards
         path.add(0, befNode);
@@ -500,10 +500,10 @@ public void recursive(List<Node> partial) {
         bestNumber = currentNumber;
     }
     
-    clean(nodes) // Pulisci i nodi su cui ciclare prima di iniziare il for, se possibile
+    cleanNodes = clean(nodes) // Pulisci i nodi su cui ciclare prima di iniziare il for, se possibile, considera di usare i set
 
     // Ricorsione 
-    for (Node n : nodes) {
+    for (Node n : cleanNodes) {
         // Filtro in entrata
         if (filter(partial, n)) {
             partial.add(p);
@@ -525,6 +525,7 @@ public void doAlways() {
 }
 
 public boolean isComplete(List<Node> partial) {
+    //TODO
     return true;
 }
 
@@ -729,16 +730,6 @@ public enum EventType {
 
 [![lahmansbaseballdb.png](https://i.postimg.cc/zvWm867d/lahmansbaseballdb-tiny.png)](https://postimg.cc/V0YZF73M)
 
-### Queries used during simulations and beyond
-
-```sql
--- Seleziona tutti i giocatori in
-SELECT *
-FROM salaries s 
-WHERE s.`year` = 2000
-AND s.salary > 100000
-```
-
 ### SQL Tips and Tricks
 
 - `COUNT(DISTINCT ...)` è diverso da `COUNT(...)`
@@ -788,3 +779,69 @@ AND s.salary > 100000
   20. `PERIOD_ADD()`, `PERIOD_DIFF()`: Adds or subtracts a specified number of months to a period format (YYMM or YYYYMM).
 
   21. `SYSDATE()`: Returns the time at which the function executes.
+
+### Java Sets useful operations
+
+Sure, Java's `Set` interface doesn't directly provide methods for set operations such as union, intersection, or difference. However, we can perform these operations by using methods from the `Set` interface and `java.util.Collections` class, and also from Java 8's Stream API. Here are some examples:
+
+1. **Union** - The union of two sets is a new set that contains all the elements from both sets. 
+
+```java
+Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+
+// Union
+Set<Integer> union = new HashSet<>(set1);
+union.addAll(set2);
+```
+
+2. **Intersection** - The intersection of two sets is a new set that contains only the elements that are in both sets.
+
+```java
+Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+
+// Intersection
+Set<Integer> intersection = new HashSet<>(set1);
+intersection.retainAll(set2);
+```
+
+3. **Difference (Subtraction)** - The difference of two sets is a new set that contains elements in the first set but not in the second.
+
+```java
+Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+
+// Difference
+Set<Integer> difference = new HashSet<>(set1);
+difference.removeAll(set2);
+```
+
+4. **Symmetric Difference** - The symmetric difference of two sets is a new set that contains elements that are in one of the sets, but not in their intersection.
+
+```java
+Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+Set<Integer> set2 = new HashSet<>(Arrays.asList(3, 4, 5));
+
+// Symmetric Difference
+Set<Integer> difference1 = new HashSet<>(set1);
+difference1.removeAll(set2);
+
+Set<Integer> difference2 = new HashSet<>(set2);
+difference2.removeAll(set1);
+
+Set<Integer> symmetricDifference = new HashSet<>(difference1);
+symmetricDifference.addAll(difference2);
+```
+
+5. **Subset** - To check if a set is a subset of another (i.e., all elements of the first set are in the second set), you can use the `containsAll()` method.
+
+```java
+Set<Integer> set1 = new HashSet<>(Arrays.asList(1, 2, 3));
+Set<Integer> set2 = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5));
+
+// Subset
+boolean isSubset = set2.containsAll(set1);
+```
+
+Remember, in set operations, the resulting sets do not contain duplicate elements, because the `Set` interface in Java doesn't allow duplicates.
