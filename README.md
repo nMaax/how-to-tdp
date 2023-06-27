@@ -2,9 +2,6 @@
 
 TODO:
 
-    [ ] Add queries and ER structures of the 2 DBs
-    [ ] Add DES code
-    [ ] Implement Java Time Management notes here??
     [ ] Varie possibili query / codice per esplorare i due DB
 
 ## 🎒 Roba da portare / Todo prima dell'esame
@@ -70,14 +67,14 @@ private void loadNodes() {
     System.out.println(...) // "> Caricati tutti i NODI" + allNodes.size() + " | " + nodeIdMap.keySet().size()
 }
 
-public void buildGraph() -> {
+public void buildGraph() {
 
     // Clean the graph if necessary
     if (graph.vertexSet().size() > 0) graph = new SimpleGraph<>(DefaultEdge.class);
 
     loadNodes();
     Graphs.addAllVertices(Graph, allNodes);
-    System.out.println(...) // "> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size()
+    System.out.println(...); // "> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size()
     //TODO load Edges
 }
 ```
@@ -85,7 +82,7 @@ public void buildGraph() -> {
 ### 2 Make Queries
 
 | :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with for-inner-fors; sometimes this last approach can be easier! |
-|------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 - Watch out for Double Couples and Self Couples! --> If the graph is oriented, weighted or do not alow self-loop this could broke your code!
 - Do not make super-hard queries, in case it happens ask teachers!
@@ -222,86 +219,45 @@ void Collection<NodePair> loadEdges(Map<Integer, Node> idMap, ...) {
 #### Edge auxiliary class
 
 | :exclamation:  Remember to define `hashCode` and `equals` (and eventually `compareTo`) in each new Java Bean you define, just in case |
-|------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------- |
 
 If you want to make two pairs containing one (a, b) and the second (b, a) to look the same from .equals() and hashCode() perspective consider the following options:
 
 1. Before saving the pair into the object, sort them in the constructor
 
-```java
-public NodePair(Node a, Node b) {
-    super();
-    if (a.compareTo(B) > 0) { //or Integer.compareTo(a.getID(), b.getID())
-        this.a = a;
-        this.b = b;
-    } else {
-        this.a = b;
-        this.b = a;
+    ```java
+    public NodePair(Node a, Node b) {
+        super();
+        if (a.compareTo(B) > 0) { //or Integer.compareTo(a.getID(), b.getID())
+            this.a = a;
+            this.b = b;
+        } else {
+            this.a = b;
+            this.b = a;
+        }
     }
-}
-```
+    ```
 
 2. Use specifc `equals()` and `hashCode()` methods
 
-```java
-@Override
-public int hashCode() {
-
-    // https://stackoverflow.com/questions/1536393/good-hash-function-for-permutations
-
-    // XOR [ a.hashCode() ^ b.hashCode() ] , 
-    // or SUM [ a.hashCode() + b.hashCode() ] , 
-    // or MULTIPLY [ a.hashCode() * b.hashCode() ]
-    // or use abc's propose: hashNumbe = SUM[ R + 2*i ] / 2 
-    // where R is a arbitrary odd number > 1 and i is a generic element of the set
-    return (abc(a.hashCode()) + abc(b.hashCode()) / 2);
-}
-
-private double abc(int a) {
-    int R = 1779033703;
-    return R + 2*a;
-} 
-
-@Override
-public boolean equals(Object obj) {
-    if (this == obj)
-        return true;
-    if (obj == null)
-        return false;
-    if (getClass() != obj.getClass())
-        return false;
-    NodePair other = (NodePair) obj;
-    return ( Objects.equals(a, other.a) && Objects.equals(b, other.b) ) ||
-        ( Objects.equals(a, other.b) && Objects.equals(b, other.a) );
-}
-```
-
-If instead you just need a simple NodePair class use the following standard Java Bean
-
-```java
-public class NodePair {
-
-    Node a;
-    Node b;
-
-    public NodePair(People a, People b) {
-        super();
-        this.a = a;
-        this.b = b;
-    }
-
-    public NodePair getA() {
-        return a;
-    }
-
-    public NodePair getB() {
-        return b;
-    }
-
+    ```java
     @Override
     public int hashCode() {
-        return Objects.hash(a, b);
+
+        // https://stackoverflow.com/questions/1536393/good-hash-function-for-permutations
+
+        // XOR [ a.hashCode() ^ b.hashCode() ] , 
+        // or SUM [ a.hashCode() + b.hashCode() ] , 
+        // or MULTIPLY [ a.hashCode() * b.hashCode() ]
+        // or use abc's propose: hashNumbe = SUM[ R + 2*i ] / 2 
+        // where R is a arbitrary odd number > 1 and i is a generic element of the set
+        return (abc(a.hashCode()) + abc(b.hashCode()) / 2);
     }
+
+    private double abc(int a) {
+        int R = 1779033703;
+        return R + 2*a;
+    } 
 
     @Override
     public boolean equals(Object obj) {
@@ -312,16 +268,57 @@ public class NodePair {
         if (getClass() != obj.getClass())
             return false;
         NodePair other = (NodePair) obj;
-        return Objects.equals(a, other.a) && Objects.equals(b, other.b);
+        return ( Objects.equals(a, other.a) && Objects.equals(b, other.b) ) ||
+            ( Objects.equals(a, other.b) && Objects.equals(b, other.a) );
     }
+    ```
 
-    @Override
-    public String toString() {
-        return "NodePair [a=" + a + ", b=" + b + "]";
+    If instead you just need a simple NodePair class use the following standard Java Bean
+
+    ```java
+    public class NodePair {
+
+        Node a;
+        Node b;
+
+        public NodePair(People a, People b) {
+            super();
+            this.a = a;
+            this.b = b;
+        }
+
+        public NodePair getA() {
+            return a;
+        }
+
+        public NodePair getB() {
+            return b;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(a, b);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            NodePair other = (NodePair) obj;
+            return Objects.equals(a, other.a) && Objects.equals(b, other.b);
+        }
+
+        @Override
+        public String toString() {
+            return "NodePair [a=" + a + ", b=" + b + "]";
+        }
+
     }
-
-}
-```
+    ```
 
 ### 2.5.5 Test DAO Methods (if you need idMaps to test these methods make idMaps Getters in the model!)
 
@@ -384,11 +381,11 @@ return result;
 
 ```java
 
-// Sample findPath algorithm using a DepthFirstIterator
+// Sample findPath algorithm using a BreadthFirstIterator
 
 public findPath(Node source, Node sink) {
 
-    BreadthFirstIterator<Fermata, DefaultEdge> iterator = 
+    BreadthFirstIterator<Node, DefaultEdge> iterator = 
             new BreadthFirstIterator<>(graph, source);
 
     List<Node> reachableNodes = new ArrayList<>();
@@ -397,13 +394,13 @@ public findPath(Node source, Node sink) {
         reachableNodes.add(n);
     }
 
-    List<Fermata> path = new ArrayList<>();
+    List<Node> path = new ArrayList<>();
     Node currentNode = sink;
     percorso.add(sink);
     DefaultEdge e = iterator.getSpanningTreeEdge(currentNode);
 
     while (e != null) {s
-        Node befNode = Graphs.getOppositeVertex(graph, e, currentNode);	
+        Node befNode = Graphs.getOppositeVertex(graph, e, currentNode);    
         // Add at index 0 in order to don't have a list backwards
         path.add(0, befNode);
         currentNode = befNode;
@@ -445,8 +442,6 @@ Make model unmutable and do not make getter for stuff you dont want to show, use
 
 ### 7. Combinatory Recursion Algorithm
 
-***Note***
-> :bulb: If the recursive algorithm consist of a MIN-MAX function then know that you could avoid recursion and use Operative Research instead! But you would need a java library that imlements Simplex Method etc. so not really doable during an exam
 
 ```java
 // Schema from teachers
@@ -565,7 +560,187 @@ public boolean filter(List<Node> partial, Node n) {
 
 ### 8. Discrete Event Simulator
 
+### Simulator class
+
 ```java
 // Personal Schema
 
+public class Simulator {
+    
+    // Input data
+    InputData in;
+    
+    // WIP data
+    WIPData wip 
+    
+    // Costraints (usually default data)
+    Costraint c; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+
+    // LocalDateTime-linke costraints (usually default data)
+    LocalDate simStart; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+    LocalDate simStop; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+    
+    // Output data
+    OutputData out;
+
+    // Queue of Events
+    Queue<Event> queue;
+    
+    public Simulator(InputData inputData, ...) {
+        super();
+
+        // Set inputs 
+        this.inputData = inputData;
+
+        // Set default data
+        this.defaultData // = ...;
+
+        // Build the queue
+        this.queue = new PriorityQueue<>();
+
+    }
+    
+    // Setters for default data
+    // TODO
+
+    // Getters for output data
+    // TODO
+    
+    public void init() {
+
+        for (int time = 0; time < maxTime; time++) { // or use LocalDateTime with SimStart, SimStop
+            //Define event type
+            EventType type = DEFAULT_TYPE;
+            if (Math.random() <= probabilty) {
+                type = ALT_TYPE;
+            }
+            // Define event data
+            Data eData; // = ...
+            // Define event
+            Event e = new Event(time, type, eData);
+            queue.add(e);
+        }
+                
+    }
+    
+    public void run() {
+        while (!queue.isEmpty()) {
+
+            // Poll event
+            Event e = queue.poll();
+            
+            // Extracts Time, Type and EventData
+            LocalDate time = e.getTime();
+            EventType type = e.getType();
+            int eData = e.geteData;
+            
+            // Debug Event
+            System.out.println(e);
+            
+            // Handle event
+            switch (type) {
+            
+            case DEFAULT_TYPE:
+                processDefaultEvent(e); // Update Outputdata!
+                break;
+            
+            case ALT_TYPE:
+                processAltEvent(e); // Update Outputdata!
+                break;
+                
+            default:
+                throw new RuntimeException("**ERRORE** -- Evento " + type + " non riconosciuto");
+            }
+
+        }
+    }
+    
+    public void processEvent(Event e) {
+        //TODO ...
+    }
+    
+}
+
 ```
+
+#### Event class
+
+```java
+
+public class Event implements Comparable<Event>{
+    
+    LocalDate time;
+    EventType type;
+    EventData eData;
+    
+    public Event(LocalDate time, EventType type, EventData eData) {
+        super();
+        this.time = time;
+        this.type = type;
+        this.eData = eData;
+    }
+
+    public LocalDate getTime() {
+        return time;
+    }
+
+    public EventType getType() {
+        return type;
+    }
+
+    public int geteData() {
+        return eData;
+    }
+
+    @Override
+    public int compareTo(Event o) {
+        return this.getTime().compareTo(o.getTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Event [time=" + time + ", type=" + type + ", eData=" + eData + "]";
+    }
+    
+    
+    
+}
+
+```
+
+#### EventType enum
+
+```java
+
+public enum EventType {
+    
+    DEFAULT_TYPE,
+    ALT_TYPE
+    
+}
+
+```
+
+### Extra material
+
+#### Java Time Management table
+
+| SQL | JDBC: *java.sql* | Model: *java.time* |
+|--------|--------------------------------|-------------|
+**DATE** | `Date` (sub of java.util.Date) | `LocalDate` |
+**DATETIME** | `Timestamp` (sub of java.util.Date) | `LocalDateTime` |
+**TIMESTAMP** (*mySQL only*)
+
+> ***Note*** You can convert from *java.sql* to *java.time* with `.toLocalDate()` method
+
+#### Database ER Models
+
+##### Go Sales
+
+[![gosales.png](https://i.postimg.cc/05KK7jFm/immagine.png)](https://postimg.cc/c6ZJSxs4)
+
+##### Lahmans Baseball
+
+[![lahmansbaseballdb.png](https://i.postimg.cc/fb0Q84NH/immagine.png)](https://postimg.cc/Y4kPSsjg)
+
+#### Queries used during simulations and beyond
