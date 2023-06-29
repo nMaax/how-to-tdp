@@ -1,7 +1,5 @@
 # 📝 How To TdP
 
-     TODO Controller standard code
-
 ## ✍️ Table of Contents
 
 1. [Roba da portare / Todo prima dell'esame](#-roba-da-portare--todo-prima-dellesame)
@@ -10,7 +8,7 @@
 4. [Seconda Parte](#-seconda-parte-algoritmo-di-ricorsione-o-simulatore-ad-eventi-discreti)
    1. [Ricorsione](#combinatory-recursion-algorithm)
    2. [Simulatore](#discrete-event-simulator)
-5. [Extra material](#-extra-material)
+5. [Extra stuff](#-extra-stuff)
    1. [Controller standard code](#controller-standard-code)
    2. [Java Time Management table](#java-time-management-table)
    3. [SQL Tips and Tricks](#sql-tips-and-tricks)
@@ -66,10 +64,10 @@ Here is a simple list of usual things that could break your code:
 ### 1. Skeleton of model
 
 ```java
-Graph<?,?> graph;
-List<Node> allNodes; 
-Dao dao;
-Map<Integer, Node> idMap; // Only if necessary!
+private Graph<?,?> graph;
+private List<Node> allNodes; 
+private Dao dao;
+private Map<Integer, Node> idMap; // Only if necessary!
 
 public Model() { 
     graph = new Graph<>(Edge.class); 
@@ -86,8 +84,11 @@ private void loadNodes() {
     if (this.allNodes.isEmpty() || this.idMap.isEmpty()){ 
         this.allNodes = this.dao.getAllNodes;
         for (Node n : this.allNodes) this.idMap.put(n.getId(), n); 
+        System.out.println("> Caricati tutti i NODI sulla LISTA" + allNodes.size() + " e MAPPA " + nodeIdMap.keySet().size());
+        dao.updateNodes(idMap)
+        System.out.println("> Aggiornati i nodi");
+
     }
-    System.out.println(...); // "> Caricati tutti i NODI" + allNodes.size() + " | " + nodeIdMap.keySet().size()
 }
 
 public void buildGraph() {
@@ -97,7 +98,7 @@ public void buildGraph() {
 
     loadNodes();
     Graphs.addAllVertices(graph, allNodes);
-    System.out.println(...); // "> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size()
+    System.out.println("> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size());
 
     //TODO load Edges
 }
@@ -140,7 +141,7 @@ AND s1.playerID <> s2.playerID -- Self-loop avoided :)
 
 ### 2.5 Create unimplementhed DAO methods and (eventually) an edge auxiliary class
 
-> :bulb: Consider that the jGraphT library provieds a pre-made Edge auxiliary class called [*Pair*](https://jgrapht.org/javadoc/org.jgrapht.core/org/jgrapht/alg/util/Pair.html)
+> :bulb: Consider that the jGraphT library provieds a pre-made Edge auxiliary class called [*Pair*](https://jgrapht.org/javadoc/org.jgrapht.core/org/jgrapht/alg/util/Pair.html), **NOTA BENE:exclamation:** Pair distingue tra (a, b) e (b, a)
 
 ```java
 
@@ -200,7 +201,7 @@ public void Collection<Stuff> loadStuff(Map<Integer, Node> idMap, ...) {
 
     } catch (SQLException e) {
         e.printStackTrace();
-        return null;
+        throw new RuntimeException("*** ERROR Connection Database ***");
     }
 }
 
@@ -237,7 +238,7 @@ public void Collection<NodePair> loadEdges(Map<Integer, Node> idMap, ...) {
 
     } catch (SQLException e) {
         e.printStackTrace();
-        return null;
+        throw new RuntimeException("*** ERROR Connection Database ***");
     }
 }
 ```
@@ -351,11 +352,12 @@ If you want to make two pairs containing one (a, b) and the second (b, a) to loo
 ```java
 void buildGraph() { 
 
-    // TODO Preliminar stuff ...
+    // Clean the graph if necessary
+    if (graph.vertexSet().size() > 0) graph = new SimpleGraph<>(DefaultEdge.class);
 
     loadNodes();
     Graphs.addAllVertices(Graph, allNodes);
-    System.out.println(...); // "> Caricati i nodi nei vertici del grafo: " + graph.vertexSet().size()
+    System.out.println("> Caricati i NODI nei VERTICI del grafo: " + graph.vertexSet().size());
 
     // Load Edges
     for (NodePair p : dao.getNodePairs(..., idMap)) {
@@ -365,7 +367,7 @@ void buildGraph() {
         //if (!graph.containsVertex(n2)) graph.addVertex(n2);
         graph.addEdge(n1, n2);
     }
-    System.out.println(...); // "> Caricati gli archi del grafo: " + graph.edgeSet().size()
+    System.out.println("> Caricati gli ARCHI del grafo: " + graph.edgeSet().size()); // 
 
 }
 ```
