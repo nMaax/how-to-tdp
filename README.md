@@ -15,6 +15,7 @@
    2. [SQL Tips and Tricks](#sql-tips-and-tricks)
    3. [jGraphT useful Classes](#jgrapht-useful-classes)
    4. [Java Sets useful operations](#java-sets-useful-operations)
+   5. [Controller standard code](#controller-standard-code)
 
 ## 🎒 Roba da portare / Todo prima dell'esame
 
