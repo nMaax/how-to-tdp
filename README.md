@@ -790,8 +790,10 @@ this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " +
 - In uno stesso anno, un giocatore potrebbe aver giocato in due squadre diverse (conseguenza diretta della precedente)
 - *appearances* sono le partite giocate da un giocatore, per una certa squadra, in un anno; *salaries* sono le paghe annuali di ogni giocatore
 - Possono esistere giocatori panchinari: sono stipendiati (in *salaries*) ma non hanno giocato (no in *appearances*)
-- *appearances* ha solo giocatori con almeno un gioco effettuato (colonna *games*), non esistono giocatori in *appearances* con *games*=0
+- *appearances* ha solo giocatori con almeno un gioco effettuato (colonna `games`), non esistono giocatori in *appearances* con `games`=0
+- :question: [DA VERIFICARE] qual'è la differenza tra la colonna `divID` e `div_ID` nella tabella *teams*?
 - :question: [DA VERIFICARE] Esistono prestiti di giocatori da una squadra ad un altra? (In tal caso se si presta un panchinaro ad una squadra che lo fa giocare questo sarà stipendiato solo dalla squadra originale ma avrà appearances solo nella seconda squadra...?)
+- :question: [DA VERIFICARE] i manager gestiscono solo player, solo squadre, o possono entrambi in contemporanea? Possono gestire un giocatore e una squadra la quale non comprende il giocatore? Le vincite e le perdite dei manager sono riferite alla squadra o al giocatore?
 
 ### SQL Tips and Tricks
 
