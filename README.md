@@ -1,5 +1,7 @@
 # 📝 How To TdP
 
+     TODO Controller standard code
+
 ## ✍️ Table of Contents
 
 1. [Roba da portare / Todo prima dell'esame](#-roba-da-portare--todo-prima-dellesame)
@@ -70,10 +72,10 @@ Map<Integer, Node> idMap; // Only if necessary!
 
 public Model() { 
     graph = new Graph<>(Edge.class); 
-    allNodes = new ArrayList<>; 
+    allNodes = new ArrayList<>(); 
     dao = new Dao(); 
     idMap = new HashMap<>(); 
-    ...; // lazy
+    //...; // lazy
 }
 
 private void loadNodes() {
@@ -93,7 +95,7 @@ public void buildGraph() {
     if (graph.vertexSet().size() > 0) graph = new SimpleGraph<>(DefaultEdge.class);
 
     loadNodes();
-    Graphs.addAllVertices(Graph, allNodes);
+    Graphs.addAllVertices(graph, allNodes);
     System.out.println(...); // "> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size()
 
     //TODO load Edges
@@ -102,7 +104,7 @@ public void buildGraph() {
 
 ### 2 Make Queries
 
-| :exclamation: Consider that if the graph is going to be really edge-dense then elaborating data on the query in order to find out all the edges just by sql, and then moving them to java, is pretty much same resource consuming as picking raw data from the DB and elaborate the edges on java itself, even with inner-fors; sometimes this last approach can be easier! |
+| :exclamation: Considera che se il grafo che dovrai creare sarà molto "denso" di archi (ovvero il grafo è *quasi* completamente connesso) allora cercare tutti gli archi con SQL potrebbe richiedere tanto tempo e risorse quanto costruirsi ogni arco direttamente in java con una serie di inner-for, in casi del genere quindi meglio usare questa seconda opzione!|
 | --- |
 
 - Watch out for **Double Couples** and **Self Couples**! --> If the graph is oriented, weighted or do not alow self-loop this could broke your code!
@@ -437,6 +439,13 @@ Make model unmutable and do not make getter for stuff you dont want to show, use
 // Schema from teachers
 
 /*
+
+*** NOTA BENE!!  *** 
+
+Ciclare su un SET non è come ciclare su una LIST, 
+attento che se cicli su un set potrebbero crearsi, a ogni livello ricorsivo,
+dei cicli che non rispettano l'ordine corretto!
+
 Consider using HashSet and their sets' operations in your code to improve computational speed. The use of `HashSet` in your code depends on the requirements of your algorithm and the characteristics of the data you're working with. Here are a few points to consider:
 
     1. **Duplicate checking:** If you need to check for duplicates frequently, a `HashSet` could provide a performance improvement because it offers O(1) complexity for the `contains` operation, while an `ArrayList` offers O(n) complexity. However, in your current pseudocode, I don't see a need for such operation.
@@ -464,14 +473,12 @@ Rispondere alle seguenti domande:
     - Qual è la struttura dati per memorizzare lo stato della ricerca (della ricorsione)?
 */
 
-// New Attributes
-
+// New Attributes, add these in the top section of the model class
 private List<Node> best; // The current best solution
 private double bestNumber; // A number that represents the goodness of the solution, faster that using data structures with methods
 private int limit; // Level limit
 
 // Setup
-
 public List<Node> start(int limit) {
     this.best = new ArrayList<>();
     this.bestNumber = 0;
@@ -487,30 +494,32 @@ public List<Node> start(int limit) {
 }
 
 // Recursive algorithm
-
-public void recursive(List<Node> partial) {
+public void recursive(List<Node> partial, Set<Node> candidates) {
     
+    // Ultimo nodo inserito, utile se devi fare dei controlli
+    // Node cursor = partial.get(partial.size()-1);
+
     // Comandi da fare sempre, molto raro
-    doAlways();
+    // doAlways();
 
     // Condizione di terminazione
-    if (something > limit) return;
+    // if (something > limit) return;
     
     // Controllo della migliore soluzione
     double currentNumber = calcNumber(partial);
     if (isComplete(current) && currentNumber > bestNumber) {
-        best.clear();
-        best.addAll(partial);
+        best = new ArrayList<>(partial);
         bestNumber = currentNumber;
     }
     
-    cleanNodes = clean(nodes) // Pulisci i nodi su cui ciclare prima di iniziare il for, se possibile, considera di usare i set
+    // *** NOTA BENE!! *** Ciclare su un SET non è come ciclare su una LIST, attento che se cicli su un set potrebbero crearsi, a ogni livello ricorsivo, dei cicli che non rispettano l'ordine corretto!
+    List<Node> actualCandidates = clean(candidates); // Pulisci i nodi su cui ciclare prima di iniziare il for, se possibile, considera di usare i set
 
     // Ricorsione 
-    for (Node n : cleanNodes) {
+    for (Node n : actualCandidates) {
         // Filtro in entrata
         if (filter(partial, n)) {
-            partial.add(p);
+            partial.add(n);
             // Maybe instantiating a new ArrayList<>(partial) could be a good option?
             // Note: Instantiating a new list at each step can be memory intensive if your recursion depth is large. 
             // If partial doesn't need to be immutable across recursive calls, it would be more efficient to
@@ -533,8 +542,9 @@ public boolean isComplete(List<Node> partial) {
     return true;
 }
 
-public void clean(List<Node> nodes) {
+public List<Node> clean(List<Node> nodes) {
     //TODO
+    return null;
 }
 
 public double calcNumber(List<Node> partial) {
@@ -544,7 +554,7 @@ public double calcNumber(List<Node> partial) {
 
 public boolean filter(List<Node> partial, Node n) {
     //TODO
-    return false; //placeholder return
+    return true; //placeholder return
 }
 
 ```
@@ -713,6 +723,19 @@ public enum EventType {
 
 ## 🙌 Extra material
 
+### Controller standard code
+
+```java
+
+try {
+			n = Integer.parseInt(txtN.getText().strip());
+		} catch (NumberFormatException e) {
+			txtResult.setText("Inserisci un numero!");
+			return;
+		}
+
+```
+
 ### Java Time Management table
 
 | SQL | JDBC: *java.sql* | Model: *java.time* |
@@ -731,6 +754,10 @@ public enum EventType {
 
 #### Lahmans Baseball
 
+##### :bulb: Note importanti
+
+- In uno stesso anno, un giocatore potrebbe aver giocato in due squadre diverse
+
 [![lahmansbaseballdb.png](https://i.postimg.cc/zvWm867d/lahmansbaseballdb-tiny.png)](https://postimg.cc/V0YZF73M)
 
 ### SQL Tips and Tricks
@@ -739,6 +766,13 @@ public enum EventType {
 - Usa `>` o `<` per avere coppie uniche
 - Per calcolare delle medie puoi anche usare `SUM` e `COUNT` invece di `AVG`
 - Per non sporcare il codice con troppi join puoi usare anche `IN (SELECT ... FROM ...)`
+- Se vuoi avere la lunghezza di un `ResultSet` prova con
+
+    ```java
+        ResultSet.last();
+        return ResultSet.getRow();
+    ```
+
 - Esistono varie utilità per gestire le date in MariaDB
 
   1. `NOW()`: Returns the current date and time.
@@ -782,6 +816,62 @@ public enum EventType {
   20. `PERIOD_ADD()`, `PERIOD_DIFF()`: Adds or subtracts a specified number of months to a period format (YYMM or YYYYMM).
 
   21. `SYSDATE()`: Returns the time at which the function executes.
+
+- Se vuoi usare le regex in SQL prova con `LIKE`
+
+    Use the `LIKE` operator in a `WHERE` clause, usually with the `%` wildcard. The `%` symbol in the `LIKE` statement is used to represent any number of characters (including zero characters). For example:
+
+    ```sql
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE columnN LIKE pattern;
+    ```
+
+    Here are a few examples of how you can use `LIKE`:
+
+  - Find any values that start with "A":
+
+    ```sql
+    SELECT * FROM table_name WHERE column_name LIKE 'A%';
+    ```
+
+  - Find any values that end with "A":
+
+      ```sql
+      SELECT * FROM table_name WHERE column_name LIKE '%A';
+      ```
+
+  - Find any values that have "or" in any position:
+
+    ```sql
+    SELECT * FROM table_name WHERE column_name LIKE '%or%';
+    ```
+
+  - Find any values that start with "A" and are at least 2 characters in length:
+
+    ```sql
+    SELECT * FROM table_name WHERE column_name LIKE 'A_%';
+    ```
+
+  - Find any values that start with "A" and ends with "o":
+
+    ```sql
+    SELECT * FROM table_name WHERE column_name LIKE 'A%o';
+    ```
+
+    Note that SQL is case-insensitive, meaning `LIKE 'a%'` and `LIKE 'A%'` would return the same results. However, some SQL databases like PostgreSQL are case-sensitive. If you are using a case-sensitive database, you can use the `ILIKE` operator instead of `LIKE` to do a case-insensitive search.
+
+    There is also the `_` wildcard which represents a single character.
+
+    Remember, if you want to include literal percentage (%) or underscore (_) characters in the search pattern, you must escape them with the escape character. The default escape character is the backslash (\). If you want to define a different escape character, you can do so with the `ESCAPE` clause. Here is an example:
+
+    ```sql
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE columnN LIKE '%\_a\_%' ESCAPE '\';
+    ```
+
+    In this example, SQL will match any string that contains `_a_`.
 
 ### jGraphT useful Classes
 
