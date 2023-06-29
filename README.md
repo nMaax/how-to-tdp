@@ -721,21 +721,45 @@ public enum EventType {
 }
 ```
 
-## 🙌 Extra material
+## 🙌 Extra stuff
 
 ### Controller standard code
 
+#### Numbero da text field
+
 ```java
-
+// Retrive number from txtField
+int x;
 try {
-			n = Integer.parseInt(txtN.getText().strip());
-		} catch (NumberFormatException e) {
-			txtResult.setText("Inserisci un numero!");
-			return;
-		}
-
+    x = Integer.parseInt(txtX.getText().strip());
+} catch (NumberFormatException e) {
+    txtResult.setText("Imposta x!");
+    return;
+}
+if (x <= 0) { 
+    txtResult.setText("Inserisci un numero positivo!");
+    return;
+}
 ```
 
+#### Oggetto da combo box
+
+```java
+// Retrive object from combo box
+Node n = cmbN.getValue();
+if (n == null) {
+    txtResult.setText("Scegli un nodo!");
+    return;
+}
+```
+
+#### Costruzione grafo
+
+```java
+// Basic build graph command
+model.buildGraph(n);
+this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " + model.getEdgeSetSize() + "\n");
+```
 ### Java Time Management table
 
 | SQL | JDBC: *java.sql* | Model: *java.time* |
