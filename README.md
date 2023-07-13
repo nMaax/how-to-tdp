@@ -9,7 +9,6 @@
    1. [Ricorsione](#combinatory-recursion-algorithm)
    2. [Simulatore](#discrete-event-simulator)
 5. [Extra stuff](#-extra-stuff)
-   1. [Controller standard code](#controller-standard-code)
    2. [Java Time Management table](#java-time-management-table)
    3. [SQL Tips and Tricks](#sql-tips-and-tricks)
    4. [jGraphT useful Classes](#jgrapht-useful-classes)
@@ -73,7 +72,7 @@ public Model() {
     graph = new Graph<>(Edge.class); 
     allNodes = new ArrayList<>(); 
     dao = new Dao(); 
-    idMap = new HashMap<>(); 
+    idMap = new HashMap<>();
     //...; // lazy
 }
 
@@ -84,10 +83,10 @@ private void loadNodes() {
     if (this.allNodes.isEmpty() || this.idMap.isEmpty()){ 
         this.allNodes = this.dao.getAllNodes;
         for (Node n : this.allNodes) this.idMap.put(n.getId(), n); 
-        System.out.println("> Caricati tutti i NODI sulla LISTA" + allNodes.size() + " e MAPPA " + nodeIdMap.keySet().size());
+        System.out.println("> Caricati tutti i NODI sulla LISTA" + allNodes.size()
+            + " e MAPPA " + idMap.keySet().size());
         dao.updateNodes(idMap)
         System.out.println("> Aggiornati i nodi");
-
     }
 }
 
@@ -97,11 +96,70 @@ public void buildGraph() {
     if (graph.vertexSet().size() > 0) graph = new SimpleGraph<>(DefaultEdge.class);
 
     loadNodes();
-    Graphs.addAllVertices(graph, allNodes);
+    Graphs.addAllVertices(graph, this.getVertices());
     System.out.println("> Caricati i NODI nei vertici del grafo: " + graph.vertexSet().size());
 
     //TODO load Edges
 }
+
+public List<Node> getVertices() {
+    return dao.getAllNodesWithCostraints(idMap);
+}
+
+public Set<Node> getVertexSet() {
+    return this.graph.vertexSet();
+}
+
+public Set<Edge> getEdgeSet() {
+    return this.graph.edgeSet();
+}
+
+public int getVertexSetSize() {
+    return this.getVertexSet().size();
+}
+
+public int getEdgeSetSize() {
+    return this.getEdgeSet().size();
+}
+
+```
+
+#### Controller standard code
+
+##### Number from text field
+
+```java
+// Retrive number from txtField
+int x;
+try {
+    x = Integer.parseInt(txtX.getText().strip());
+} catch (NumberFormatException e) {
+    txtResult.setText("Imposta x!");
+    return;
+}
+if (x <= 0) { 
+    txtResult.setText("Inserisci un numero positivo!");
+    return;
+}
+```
+
+##### Object from combo box
+
+```java
+// Retrive object from combo box
+Node n = cmbN.getValue();
+if (n == null) {
+    txtResult.setText("Scegli un nodo!");
+    return;
+}
+```
+
+##### Build Graph
+
+```java
+// Basic build graph command
+model.buildGraph(n);
+this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " + model.getEdgeSetSize() + "\n");
 ```
 
 ### 2 Make Queries
@@ -726,43 +784,6 @@ public enum EventType {
 
 ## 🙌 Extra stuff
 
-### Controller standard code
-
-#### Numbero da text field
-
-```java
-// Retrive number from txtField
-int x;
-try {
-    x = Integer.parseInt(txtX.getText().strip());
-} catch (NumberFormatException e) {
-    txtResult.setText("Imposta x!");
-    return;
-}
-if (x <= 0) { 
-    txtResult.setText("Inserisci un numero positivo!");
-    return;
-}
-```
-
-#### Oggetto da combo box
-
-```java
-// Retrive object from combo box
-Node n = cmbN.getValue();
-if (n == null) {
-    txtResult.setText("Scegli un nodo!");
-    return;
-}
-```
-
-#### Costruzione grafo
-
-```java
-// Basic build graph command
-model.buildGraph(n);
-this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " + model.getEdgeSetSize() + "\n");
-```
 ### Java Time Management table
 
 | SQL | JDBC: *java.sql* | Model: *java.time* |
@@ -781,7 +802,6 @@ this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " +
 
 #### Lahmans Baseball
 
-
 [![lahmansbaseballdb.png](https://i.postimg.cc/zvWm867d/lahmansbaseballdb-tiny.png)](https://postimg.cc/V0YZF73M)
 
 ##### :bulb: Note importanti
@@ -790,8 +810,9 @@ this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " +
 - In uno stesso anno, un giocatore potrebbe aver giocato in due squadre diverse (conseguenza diretta della precedente)
 - *appearances* sono le partite giocate da un giocatore, per una certa squadra, in un anno; *salaries* sono le paghe annuali di ogni giocatore
 - Possono esistere giocatori panchinari: sono stipendiati (in *salaries*) ma non hanno giocato (no in *appearances*)
-- *appearances* ha solo giocatori con almeno un gioco effettuato (colonna `games`), non esistono giocatori in *appearances* con `games`=0
-- :question: [DA VERIFICARE] qual'è la differenza tra la colonna `divID` e `div_ID` nella tabella *teams*?
+- *appearances* ha solo giocatori con almeno un gioco effettuato (colonna `games`), non esistono giocatori in *appearances* con `games = 0`
+- Nella tabella *teams* le colonne `ID`, `teamCode`, `teamName` hanno 3 significati diversi, `ID` identifica univocamente un team in un dato anno di gioco (*e.g. la Sampdoria del 2015 non corrisponde alla Sampdoria del 2016, avranno due ID diversi*), `teamName` indica il nome della squadra (*e.g. la Sampdoria del 2015 avrà lo stsso nome della Sampdoria del 2016*), infine non ho assolutamente idea di cosa significhi `teamCode`
+- :question: [DA VERIFICARE] qual'è la differenza tra la colonna `divID` e `div_ID` nella tabella *teams* (la prima è un intero, la seconda una stringa), cosa rappresentano?
 - :question: [DA VERIFICARE] Esistono prestiti di giocatori da una squadra ad un altra? (In tal caso se si presta un panchinaro ad una squadra che lo fa giocare questo sarà stipendiato solo dalla squadra originale ma avrà appearances solo nella seconda squadra...?)
 - :question: [DA VERIFICARE] i manager gestiscono solo player, solo squadre, o possono entrambi in contemporanea? Possono gestire un giocatore e una squadra la quale non comprende il giocatore? Le vincite e le perdite dei manager sono riferite alla squadra o al giocatore?
 
