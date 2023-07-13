@@ -545,17 +545,16 @@ public List<Node> start(int limit) {
     this.bestNumber = 0;
     this.limit = limit; 
     List<Node> partial = new ArrayList<>();
-    // Se possibile prova anche a non effettuare una ricorsione
-    // su tutta la collezione che devi analizzare, potrebbe
-    // risultare più vantaggioso spezzetare tale collezione 
-    // nelle sue componenti e unire i risultati della ricorsione 
-    // su queste
-    recursive(partial);
+    
+    // *** NOTA BENE!! *** Se possibile prova anche a spezzetare candidates nelle sue componenti e unire i risultati della ricorsione  su queste
+    List<Node> candidates = new ArrayList<>(allNodes);
+
+    recursive(partial, candidates);
     return this.best;
 }
 
 // Recursive algorithm
-public void recursive(List<Node> partial, Set<Node> candidates) {
+public void recursive(List<Node> partial, List<Node> candidates) {
     
     // Ultimo nodo inserito, utile se devi fare dei controlli
     // Node cursor = partial.get(partial.size()-1);
@@ -582,9 +581,7 @@ public void recursive(List<Node> partial, Set<Node> candidates) {
         if (filter(partial, n)) {
             partial.add(n);
             // Maybe instantiating a new ArrayList<>(partial) could be a good option?
-            // Note: Instantiating a new list at each step can be memory intensive if your recursion depth is large. 
-            // If partial doesn't need to be immutable across recursive calls, it would be more efficient to
-            // avoid new instantiations and reuse the list as you're currently doing.
+            // Note: Instantiating a new list at each step can be memory intensive if your recursion depth is large. If partial doesn't need to be immutable across recursive calls, it would be more efficient to avoid new instantiations and reuse the list as you're currently doing.
             recursive(partial); 
             // Backtracking
             partial.remove(partial.size()-1); // Keep in mind that this will only work if partial has not been shuffled before!
