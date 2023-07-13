@@ -497,7 +497,7 @@ Make model unmutable and do not make getter for stuff you dont want to show, use
 ### Combinatory Recursion Algorithm
 
 ```java
-// Schema from teachers
+// Personal schema
 
 /*
 
@@ -577,42 +577,16 @@ public void recursive(List<Node> partial, List<Node> candidates) {
 
     // Ricorsione 
     for (Node n : actualCandidates) {
-        // Filtro in entrata
+        // Filtro in entrata    
         if (filter(partial, n)) {
             partial.add(n);
             // Maybe instantiating a new ArrayList<>(partial) could be a good option?
             // Note: Instantiating a new list at each step can be memory intensive if your recursion depth is large. If partial doesn't need to be immutable across recursive calls, it would be more efficient to avoid new instantiations and reuse the list as you're currently doing.
-            recursive(partial); 
+            recursive(partial, actualCandidates); 
             // Backtracking
             partial.remove(partial.size()-1); // Keep in mind that this will only work if partial has not been shuffled before!
         }
     }
-}
-
-// Filters and controls
-
-public void doAlways() {
-    //TODO
-}
-
-public boolean isComplete(List<Node> partial) {
-    //TODO
-    return true;
-}
-
-public List<Node> clean(List<Node> nodes) {
-    //TODO
-    return null;
-}
-
-public double calcNumber(List<Node> partial) {
-    //TODO
-    return 0.0; //placeholder return
-}
-
-public boolean filter(List<Node> partial, Node n) {
-    //TODO
-    return true; //placeholder return
 }
 
 ```
@@ -635,8 +609,8 @@ public class Simulator {
     Costraint c; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
 
     // LocalDateTime-linke costraints (usually default data)
-    LocalDate simStart; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
-    LocalDate simStop; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+    //LocalDate simStart; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+    //LocalDate simStop; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
     
     // Output data
     OutputData out;
@@ -676,9 +650,9 @@ public class Simulator {
                 type = ALT_TYPE;
             }
             // Define event data
-            Data eData; // = ...
+            String data; // = ...
             // Define event
-            Event e = new Event(time, type, eData);
+            Event e = new Event(time, type, data);
             queue.add(e);
         }
                 
@@ -691,9 +665,9 @@ public class Simulator {
             Event e = queue.poll();
             
             // Extracts Time, Type and EventData
-            LocalDate time = e.getTime();
+            int time = e.getTime(); //or LocalDate time = e.getTime();
             EventType type = e.getType();
-            int eData = e.geteData;
+            String data = e.getdata;
             
             // Debug Event
             System.out.println(e);
@@ -716,10 +690,6 @@ public class Simulator {
         }
     }
     
-    public void processEvent(Event e) {
-        //TODO ...
-    }
-    
 }
 
 ```
@@ -730,18 +700,18 @@ public class Simulator {
 
 public class Event implements Comparable<Event>{
     
-    LocalDate time;
+    int time; //or LocalDateTime time
     EventType type;
-    EventData eData;
+    String data;
     
-    public Event(LocalDate time, EventType type, EventData eData) {
+    public Event(LocalDate time, EventType type, String data) {
         super();
         this.time = time;
         this.type = type;
-        this.eData = eData;
+        this.data = data;
     }
 
-    public LocalDate getTime() {
+    public int getTime() {
         return time;
     }
 
@@ -749,8 +719,8 @@ public class Event implements Comparable<Event>{
         return type;
     }
 
-    public int geteData() {
-        return eData;
+    public String getdata() {
+        return data;
     }
 
     @Override
@@ -760,10 +730,8 @@ public class Event implements Comparable<Event>{
 
     @Override
     public String toString() {
-        return "Event [time=" + time + ", type=" + type + ", eData=" + eData + "]";
+        return "Event [time=" + time + ", type=" + type + ", data=" + data + "]";
     }
-    
-    
     
 }
 
@@ -789,13 +757,26 @@ public enum EventType {
 `DATETIME` | `Timestamp` (sub of java.util.Date) | `LocalDateTime` |
 `TIMESTAMP` (*mySQL only*) | :x: | :x: |
 
-> ***Note*** You can convert from *java.sql* to *java.time* with `.toLocalDate()` method
+> ***Note*** You can convert from *java.sql* to *java.time* with `.toLocalDate()s.Unit_price - p.Unit_price method
 
 ### Database ER Models
 
 #### Go Sales
 
 [![gosales.png](https://i.postimg.cc/05KK7jFm/immagine.png)](https://postimg.cc/c6ZJSxs4)
+
+##### :bulb: Note importanti
+
+- Nella tabella *go_daily_sales* la colonna `Unit_price` non ha valore corrispondente alla colonna `Unit_price` di *go_products*, analogalmente non c'é corrispondenza nemmeno con `Unit_sale_price`, non mi è chiaro quale sia la differenza tra i 3 ma suppongo i valori in *go_products* indichino il prezzo originale di un dato prodotto, scelto dal fornitore, mentre quello di *go_daily_sales* potrebbe essere il prezzo con cui è stato realmente venduto il prodotto, vedi query qui sotto
+
+    ```SQL
+    SELECT p.Product, r.Retailer_name, p.Unit_price, s.Unit_price, s.Unit_sale_price
+    FROM go_daily_sales s, go_products p, go_retailers r
+    WHERE s.Product_number = p.Product_number
+    AND s.Retailer_code = r.Retailer_code
+    AND p.Unit_price <> s.Unit_price
+    ORDER BY s.Product_number
+    ```
 
 #### Lahmans Baseball
 
