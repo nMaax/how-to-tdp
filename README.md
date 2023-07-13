@@ -639,7 +639,7 @@ public class Simulator {
     
     // Getters for output data
     public int getOutputData() {
-         // TODO
+        // TODO
     } 
      
     public void init() {
@@ -767,7 +767,7 @@ public enum EventType {
 
 [![gosales.png](https://i.postimg.cc/05KK7jFm/immagine.png)](https://postimg.cc/c6ZJSxs4)
 
-##### :bulb: Note importanti
+##### :bulb: Note importanti su Go Sales
 
 - Nella tabella *go_daily_sales* la colonna `Unit_price` non ha valore corrispondente alla colonna `Unit_price` di *go_products*, analogalmente non c'é corrispondenza nemmeno con `Unit_sale_price`, non mi è chiaro quale sia la differenza tra i 3 ma suppongo i valori in *go_products* indichino il prezzo originale di un dato prodotto, scelto dal fornitore, mentre quello di *go_daily_sales* potrebbe essere il prezzo con cui è stato realmente venduto il prodotto, vedi query qui sotto
 
@@ -784,7 +784,7 @@ public enum EventType {
 
 [![lahmansbaseballdb.png](https://i.postimg.cc/zvWm867d/lahmansbaseballdb-tiny.png)](https://postimg.cc/V0YZF73M)
 
-##### :bulb: Note importanti
+##### :bulb: Note importanti su Lahmans Baseball
 
 - In uno stesso anno, un giocatore potrebbe essere stato stipendiato da due squadre diverse
 - In uno stesso anno, un giocatore potrebbe aver giocato in due squadre diverse (conseguenza diretta della precedente)
