@@ -33,15 +33,15 @@
 
 ## 📝 Da controllare alla fine
 
-- Assicurati di aver definito `hashCode` e `equals` in ogni java bean
-- Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
-- Pulisci i dati relativi a Simulatore e Ricorsione ogni volta che premi il pulsante "*Simula*" o "*Avvia ricorsione*"
-- Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
-- Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***fine punto 1***)
-- Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
-- Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
-- Usa `try (Connection conn = ...)` o :exclamation:**chiudi `conn`** alla fine di ogni blocco `try`
-- Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
+- [ ] Assicurati di aver definito `hashCode` e `equals` in ogni java bean
+- [ ] Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
+- [ ] Pulisci i dati relativi a Simulatore e Ricorsione ogni volta che premi il pulsante "*Simula*" o "*Avvia ricorsione*"
+- [ ] Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
+- [ ] Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***fine punto 1***)
+- [ ] Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
+- [ ] Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
+- [ ] Usa `try (Connection conn = ...)` o :exclamation:**chiudi `conn`** alla fine di ogni blocco `try`
+- [ ] Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
 
 ***Note***
 > :zap: Non preoccuparti se la complessità degli algoritmi per generare una soluzione richiesta all'esame è alta, ai professori basta che funzioni. La seconda parte dell'esame non sarà valutata (solo) sulla base dei semplici output che il tuo algoritmo fa ma anche sulla logica che hai implementato, se per esempio il tuo algoritmo ricorsivo "esplode" facilmente non farti prendere dal panico, sarà lecito lo stesso e verrà valutato solo se ci sono delle vere e proprie fallacie logiche!
