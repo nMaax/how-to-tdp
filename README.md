@@ -596,100 +596,102 @@ public void recursive(List<Node> partial, List<Node> candidates) {
 ### Simulator class
 
 ```java
-// Personal Schema
+//Personal Schema
+
 public class Simulator {
-    
+ 
     // Input data
     InputData in;
-    
+ 
     // WIP data
     WIPData wip 
-    
+ 
     // Costraints (usually default data)
     Costraint c; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
 
-    // LocalDateTime-linke costraints (usually default data)
-    //LocalDate simStart; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
-    //LocalDate simStop; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+     // LocalDateTime-linke costraints (usually default data)
+     //LocalDate simStart; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+     //LocalDate simStop; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
+     
+     // Output data
+     OutputData out;
     
-    // Output data
-    OutputData out;
-
-    // Queue of Events
-    Queue<Event> queue;
+     // Queue of Events
+     Queue<Event> queue;
+ 
+     public Simulator(InputData inputData, ...) {
+         super();
     
-    public Simulator(InputData inputData, ...) {
-        super();
-
-        // Set inputs 
-        this.inputData = inputData;
-
-        // Set default data (WIP, costraints, outputs, ...)
-        this.defaultData // = ...;
-
-        // Build the queue
-        this.queue = new PriorityQueue<>();
-    }
+         // Set inputs 
+         this.inputData = inputData;
     
-    // Setters for default data
-    public void setDefaultData() {
-        // TODO
-    }
-
-    // Getters for output data
-    public OutputData getOutputData() {
-        // TODO
-    } 
+         // Set default data (WIP, costraints, outputs, ...)
+         this.defaultData // = ...;
     
-    public void init() {
-
-        for (int time = 0; time < maxTime; time++) { // or use LocalDateTime with SimStart, SimStop
-            //Define event type
-            EventType type = DEFAULT_TYPE;
-            if (Math.random() <= probabilty) {
-                type = ALT_TYPE;
-            }
-            // Define event data
-            String data; // = ...
-            // Define event
-            Event e = new Event(time, type, data);
-            queue.add(e);
-        }
-                
-    }
+         // Build the queue
+         this.queue = new PriorityQueue<>();
+     }
+     
+     // Setters for default data
+     public void setDefaultData() {
+         // TODO
+     }
     
-    public void run() {
-        while (!queue.isEmpty()) {
-
-            // Poll an event
-            Event e = queue.poll();
-            
-            // Extracts Time, Type and EventData
-            int time = e.getTime(); //or LocalDate time = e.getTime();
-            EventType type = e.getType();
-            String data = e.getdata;
-            
-            // Debug Event
-            System.out.println(e);
-            
-            // Handle event
-            switch (type) {
-            
-            case DEFAULT_TYPE:
-                processDefaultEvent(e); // Update Outputdata!
-                break;
-            
-            case ALT_TYPE:
-                processAltEvent(e); // Update Outputdata!
-                break;
-                
-            default:
-                throw new RuntimeException("**ERRORE** -- Evento " + type + " non riconosciuto");
-            }
-
-        }
-    }
+     // Getters for output data
+     public OutputData getOutputData() {
+         // TODO
+     } 
+     
+     public void init() {
     
+         for (int time = 0; time < maxTime; time++) { // or use LocalDateTime with SimStart, SimStop
+             //Define event type
+             EventType type = DEFAULT_TYPE;
+             if (Math.random() <= probabilty) {
+                 type = ALT_TYPE;
+             }
+             // Define event data
+             String data; // = ...
+             // Define event
+             Event e = new Event(time, type, data);
+             queue.add(e);
+         }
+                 
+     }
+     
+     public void run() {
+         
+         while (!queue.isEmpty()) {
+    
+             // Poll an event
+             Event e = queue.poll();
+             
+             // Extracts Time, Type and EventData
+             int time = e.getTime(); //or LocalDate time = e.getTime();
+             EventType type = e.getType();
+             String data = e.getdata;
+             
+             // Debug Event
+             System.out.println(e);
+             
+             // Handle event
+             switch (type) {
+         
+             case DEFAULT_TYPE:
+                 processDefaultEvent(e); // Update Outputdata!
+                 break;
+             
+             case ALT_TYPE:
+                 processAltEvent(e); // Update Outputdata!
+                 break;
+                 
+             default:
+                 throw new RuntimeException("**ERRORE** -- Evento " + type + " non riconosciuto");
+             }
+    
+         }
+     }
+
 }
 
 ```
@@ -703,7 +705,7 @@ public class Event implements Comparable<Event>{
     int time; //or LocalDateTime time
     EventType type;
     String data;
-    
+
     public Event(LocalDate time, EventType type, String data) {
         super();
         this.time = time;
@@ -803,8 +805,8 @@ public enum EventType {
 - Se vuoi avere la lunghezza di un `ResultSet` prova con
 
     ```java
-        ResultSet.last();
-        return ResultSet.getRow();
+    ResultSet.last();
+    return ResultSet.getRow();
     ```
 
 - Esistono varie utilità per gestire le date in MariaDB
