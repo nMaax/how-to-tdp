@@ -9,10 +9,10 @@
    1. [Ricorsione](#combinatory-recursion-algorithm)
    2. [Simulatore](#discrete-event-simulator)
 5. [Extra stuff](#-extra-stuff)
-   2. [Java Time Management table](#java-time-management-table)
-   3. [SQL Tips and Tricks](#sql-tips-and-tricks)
-   4. [jGraphT useful Classes](#jgrapht-useful-classes)
-   5. [Java Sets useful operations](#java-sets-useful-operations)
+   1. [Java Time Management table](#java-time-management-table)
+   2. [SQL Tips and Tricks](#sql-tips-and-tricks)
+   3. [jGraphT useful Classes](#jgrapht-useful-classes)
+   4. [Java Sets useful operations](#java-sets-useful-operations)
 
 ## 🎒 Roba da portare / Todo prima dell'esame
 
