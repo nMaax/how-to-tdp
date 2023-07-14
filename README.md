@@ -727,7 +727,7 @@ public class Event implements Comparable<Event>{
 
     @Override
     public int compareTo(Event o) {
-        return this.getTime().compareTo(o.getTime());
+        return Integer.compare(this.time, o.getTime());
     }
 
     @Override
