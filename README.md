@@ -3,7 +3,7 @@
 ## ✍️ Table of Contents
 
 1. [Roba da portare / Todo prima dell'esame](#-roba-da-portare--todo-prima-dellesame)
-2. [Da controllare alla fine](#-da-controllare-alla-fine)
+2. [Da controllare alla fine](#exclamation--da-controllare-alla-fine)
 3. [Prima Parte](#-prima-parte-dao-jdbc-jgraphs--javafx-mvc-connectionpooling-best-practices-)
 4. [Seconda Parte](#-seconda-parte-algoritmo-di-ricorsione-o-simulatore-ad-eventi-discreti)
    1. [Ricorsione](#combinatory-recursion-algorithm)
@@ -694,7 +694,7 @@ public class Simulator {
         }
     }
 
-}
+}   
 
 ```
 
