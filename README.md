@@ -36,9 +36,8 @@
 - [ ] Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
 - [ ] Pulisci i dati relativi a Simulatore e Ricorsione ogni volta che premi il pulsante "*Simula*" o "*Avvia ricorsione*"
 - [ ] Pulisci dati dentro il `Model` e i `Text Field / Input` nel Controller se devono essere puliti durante l'esecuzione
-- [ ] Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***fine punto 1***)
-- [ ] Controlla attentamente che le informazioni estratte dal DB siano quelle corrette
-- [ ] Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal dao (double, int, String, LocalDateTime, ...)
+- [ ] Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***inizio punto 1***)
+- [ ] Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal DB (double, int, String, LocalDateTime, ...)
 - [ ] Usa `try (Connection conn = ...)` o :exclamation:**chiudi `conn`** alla fine di ogni blocco `try`
 - [ ] Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
 
@@ -769,6 +768,10 @@ public enum EventType {
 
 ##### :bulb: Note importanti su Go Sales
 
+- *go_products*: contiene le informazioni sui prodotti GO
+- *go_retailers*: contiene informazioni sui rivenditori GO.
+- *go_daily_sales*: tabella con le vendite di prodotti GO effettuate dai rivenditori. Ogni vendita ha una data e l’arco di tempo considerato va dal 2015 al 2018.
+- go_methods: tabella con i metodi di ordinazione con cui è stata fatta una vendita (ad esempio via telefono, via email, …).
 - Nella tabella *go_daily_sales* la colonna `Unit_price` non ha valore corrispondente alla colonna `Unit_price` di *go_products*, analogalmente non c'é corrispondenza nemmeno con `Unit_sale_price`, non mi è chiaro quale sia la differenza tra i 3 ma suppongo i valori in *go_products* indichino il prezzo originale di un dato prodotto, scelto dal fornitore, mentre quello di *go_daily_sales* potrebbe essere il prezzo con cui è stato realmente venduto il prodotto, vedi query qui sotto
 
     ```SQL
