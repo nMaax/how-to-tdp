@@ -30,7 +30,7 @@
   - [GitHub](https://github.com/nMaax)
   - GitHub Classroom
 
-## 📝 Da controllare alla fine
+## :exclamation: 📝 Da controllare alla fine
 
 - [ ] Assicurati di aver definito `hashCode` e `equals` in ogni java bean
 - [ ] Pulisci il grafo ogni volta che fai clic sul pulsante "*Crea grafo*"
@@ -39,6 +39,7 @@
 - [ ] Controlla possibili errori di input nel Controller e trova modi per rompere il tuo codice (:exclamation:vedi a ***inizio punto 1***)
 - [ ] Controlla attentamente di utilizzare il tipo di dato giusto durante il recupero dei dati dal DB (double, int, String, LocalDateTime, ...)
 - [ ] Usa `try (Connection conn = ...)` o :exclamation:**chiudi `conn`** alla fine di ogni blocco `try`
+- [ ] Attento ad utilizzare le strutture dati che jGraphT ti restituisce direttamente con i suoi metodi (vertexSet, EdgeSet, connectedComponentsOf, ...), in quanto sono quasi sempre immodificiabili e ***talvolta*** potrebbero fornirti dati errati, sempre meglio salvarsi tali dati in una struttura tua a parte!
 - [ ] Dopo ogni esame/simulazione elimina le chiavi github che potrebbero essere memorizzate in eclipse o altrove!
 
 ***Note***
@@ -84,7 +85,7 @@ private void loadNodes() {
         for (Node n : this.allNodes) this.idMap.put(n.getId(), n); 
         System.out.println("> Caricati tutti i NODI sulla LISTA" + allNodes.size()
             + " e MAPPA " + idMap.keySet().size());
-        dao.updateNodes(idMap)
+        dao.updateNodes(idMap);
         System.out.println("> Aggiornati i nodi");
     }
 }
@@ -92,7 +93,7 @@ private void loadNodes() {
 public void buildGraph() {
 
     // Clean the graph if necessary
-    if (graph.vertexSet().size() > 0) graph = new SimpleGraph<>(DefaultEdge.class);
+    if (graph.vertexSet().size() > 0) graph = new Graph<>(Edge.class);
 
     loadNodes();
     Graphs.addAllVertices(graph, this.getVertices());
@@ -158,6 +159,7 @@ if (n == null) {
 ```java
 // Basic build graph command
 model.buildGraph(n);
+this.txtResult.clear();
 this.txtResult.appendText("Vertici: " + model.getVertexSetSize() + "\nArchi: " + model.getEdgeSetSize() + "\n");
 ```
 
@@ -598,96 +600,97 @@ public void recursive(List<Node> partial, List<Node> candidates) {
 //Personal Schema
 
 public class Simulator {
- 
+
     // Input data
     int in;
- 
+    
     // WIP data
-    int wip 
- 
-    // Costraints (usually default data)
+    int wip;
+    
+    // Constraints (usually default data)
     int c; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
-
-    // LocalDateTime-linke costraints (usually default data)
+    
+    // LocalDateTime-linke constraints (usually default data)
     //LocalDate simStart; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
     //LocalDate simStop; //DEFINE THE DEFAULT IN THE CONSTRUCTOR!
-    
+      
     // Output data
     int out;
-
+    
     // Queue of Events
     Queue<Event> queue;
- 
-    public Simulator(int inputData, ...) {
+    
+    public Simulator(int inputData) {
         super();
-
+    
         // Set inputs 
         this.inputData = inputData;
-
+    
         // Set default data (WIP, costraints, outputs, ...)
         this.defaultData // = ...;
-
+    
         // Build the queue
         this.queue = new PriorityQueue<>();
     }
-     
+    
     // Setters for default data
     public void setDefaultData() {
         // TODO
     }
-    
+      
     // Getters for output data
     public int getOutputData() {
         // TODO
     } 
-     
-    public void init() {
     
+    public void init() {
+        
         for (int time = 0; time < maxTime; time++) { // or use LocalDateTime with SimStart, SimStop
             //Define event type
-            EventType type = DEFAULT_TYPE;
+            EventType type = EventType.DEFAULT_TYPE;
             if (Math.random() <= probabilty) {
-                type = ALT_TYPE;
+                type = EventType.ALT_TYPE;
             }
+            
             // Define event data
             String data; // = ...
             // Define event
             Event e = new Event(time, type, data);
             queue.add(e);
         }
-                 
+    
     }
-     
+       
     public void run() {
-         
+    
         while (!queue.isEmpty()) {
-
+        
             // Poll an event
             Event e = queue.poll();
             
             // Extracts Time, Type and EventData
             int time = e.getTime(); //or LocalDate time = e.getTime();
             EventType type = e.getType();
-            String data = e.getdata;
+            String data = e.getData();
             
             // Debug Event
             System.out.println(e);
             
             // Handle event
             switch (type) {
-        
+            
             case DEFAULT_TYPE:
                 processDefaultEvent(e); // Update Outputdata!
                 break;
-            
+                  
             case ALT_TYPE:
                 processAltEvent(e); // Update Outputdata!
                 break;
-                
+        
             default:
                 throw new RuntimeException("**ERRORE** -- Evento " + type + " non riconosciuto");
+                    
             }
-
         }
     }
 
@@ -720,7 +723,7 @@ public class Event implements Comparable<Event>{
         return type;
     }
 
-    public String getdata() {
+    public String getData() {
         return data;
     }
 
